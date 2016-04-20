@@ -1,0 +1,16 @@
+
+#Comment:
+
+#ignore build files
+build.*
+build/*
+*.class
+
+#ignore the nbproject
+nbproject/*
+
+#ignore the dist folder containing the libraries and jar files
+dist/*
+
+#ignore data from first IEEE submission
+“Data from first submission”/*
