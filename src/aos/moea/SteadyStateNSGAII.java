@@ -18,10 +18,6 @@ import org.moeaframework.core.Problem;
 import org.moeaframework.core.Selection;
 import org.moeaframework.core.Solution;
 import org.moeaframework.core.Variation;
-import org.moeaframework.core.comparator.ChainedComparator;
-import org.moeaframework.core.comparator.CrowdingComparator;
-import org.moeaframework.core.comparator.RankComparator;
-import org.moeaframework.core.operator.TournamentSelection;
 
 /**
  * Steady state NSGAII uses Efficient Nondomination Level Update from Li, Ke,

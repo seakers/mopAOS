@@ -18,10 +18,8 @@ import aos.nextoperator.INextOperator;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import aos.moea.SteadyStateIBEA;
 import org.moeaframework.algorithm.IBEA;
 import org.moeaframework.core.FitnessEvaluator;
-import org.moeaframework.core.Indicator;
 import org.moeaframework.core.Initialization;
 import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.ParallelPRNG;
@@ -33,7 +31,7 @@ import org.moeaframework.core.Variation;
 import org.moeaframework.core.fitness.IndicatorFitnessEvaluator;
 
 /**
- * This hyperheuristic is uses R2 MOEA to manage the population. R2 MOEA is
+ * This AOS is uses R2 MOEA to manage the population. R2 MOEA is
  * steady state indicator based algorithm developed by Diaz et al in "A ranking
  * method based on the R2 indicator for many-objective optimization" 2013 IEEE
  * Congress on Evolutionary Computation
@@ -58,28 +56,24 @@ public class AOSIBEA extends IBEA implements IAOS {
      * heuristics. History can be extracted by getSelectionHistory(). Used for
      * analyzing the results to see the dynamics of heuristics selected
      */
-    private OperatorSelectionHistory operatorSelectionHistory;
+    private final OperatorSelectionHistory operatorSelectionHistory;
 
     /**
      * The history that stores all the rewards received by the operators. Used
      * for analyzing the results to see the dynamics in rewards
      */
-    private CreditHistory creditHistory;
+    private final CreditHistory creditHistory;
 
     /**
      * The set of heuristics that the hyper heuristic is able to work with
      */
     private final Collection<Variation> heuristics;
-
-    /**
-     * The selection operator.
-     */
-    private final Selection selection;
+    
     /**
      * The history of the heuristics' qualities over time. Used for analyzing
      * the results to see the dynamics of the heuristic qualities
      */
-    private OperatorQualityHistory qualityHistory;
+    private final OperatorQualityHistory qualityHistory;
 
     /**
      * parallel purpose random generator
@@ -90,7 +84,7 @@ public class AOSIBEA extends IBEA implements IAOS {
 
     private double[] lowerbound;
 
-    private NondominatedPopulation paretofront;
+    private final NondominatedPopulation paretofront;
 
     /**
      * Name to id the hyper-heuristic
@@ -104,7 +98,6 @@ public class AOSIBEA extends IBEA implements IAOS {
         super(problem, archive, initialization, null, fitnessEvaluator);
 
         this.heuristics = heuristicSelector.getOperators();
-        this.selection = selection;
         this.operatorSelector = heuristicSelector;
         this.creditDef = creditDef;
         this.operatorSelectionHistory = new OperatorSelectionHistory(heuristics);
@@ -146,7 +139,7 @@ public class AOSIBEA extends IBEA implements IAOS {
                     Solution refParent = parents[pprng.nextInt(parents.length)];
                     switch (creditDef.getOperatesOn()) {
                         case PARENT:
-                            creditValue += ((AbstractOffspringParent) creditDef).compute(fitnessEvaluator.normalize(child), fitnessEvaluator.normalize(refParent), null, null);
+                            creditValue += ((AbstractOffspringParent) creditDef).compute(fitnessEvaluator.normalize(child), fitnessEvaluator.normalize(refParent));
                             break;
                         default:
                             throw new NullPointerException("Credit definition not "
@@ -197,7 +190,7 @@ public class AOSIBEA extends IBEA implements IAOS {
             } else {
                 throw new UnsupportedOperationException("RewardDefinitionType not recognized ");
             }
-//        updateQualityHistory();
+        updateQualityHistory();
         }
         population.addAll(offspring);
         fitnessEvaluator.evaluate(population);
@@ -207,6 +200,17 @@ public class AOSIBEA extends IBEA implements IAOS {
             fitnessEvaluator.removeAndUpdate(population, worstIndex);
         }
 
+    }
+    
+    /**
+     * Updates the quality history every iteration for each heuristic according
+     * to the INextHeuristic class used
+     */
+    private void updateQualityHistory() {
+        HashMap<Variation, Double> currentQualities = operatorSelector.getQualities();
+        for (Variation heuristic : heuristics) {
+            qualityHistory.add(heuristic, currentQualities.get(heuristic));
+        }
     }
 
     private Population copyPrevGen(Population pop) {
@@ -265,7 +269,7 @@ public class AOSIBEA extends IBEA implements IAOS {
     }
 
     /**
-     * Reset the hyperheuristic. Clear all selection history and the credit
+     * Reset the AOS. Clear all selection history and the credit
      * repository. Clears the population and the archive
      */
     @Override

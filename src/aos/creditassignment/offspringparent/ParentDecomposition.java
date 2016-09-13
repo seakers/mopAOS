@@ -56,7 +56,7 @@ public class ParentDecomposition extends AbstractOffspringParent {
     }
 
     @Override
-    public double compute(Solution offspring, Solution parent, Population pop, Solution removedSolution) {
+    public double compute(Solution offspring, Solution parent) {
         double parentFitness = fitness(parent, weights);
         return (parentFitness - fitness(offspring, weights)) / parentFitness;
     }

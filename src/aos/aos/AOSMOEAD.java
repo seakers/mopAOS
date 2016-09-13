@@ -48,7 +48,7 @@ public class AOSMOEAD extends MOEAD implements IAOS {
      * heuristics. History can be extracted by getSelectionHistory(). Used for
      * analyzing the results to see the dynamics of heuristics selected
      */
-    private OperatorSelectionHistory heuristicSelectionHistory;
+    private final OperatorSelectionHistory heuristicSelectionHistory;
 
     /**
      * The set of heuristics that the hyper heuristic is able to work with
@@ -59,7 +59,7 @@ public class AOSMOEAD extends MOEAD implements IAOS {
      * The history of the heuristics' qualities over time. Used for analyzing
      * the results to see the dynamics of the heuristic qualities
      */
-    private OperatorQualityHistory qualityHistory;
+    private final OperatorQualityHistory qualityHistory;
 
     /**
      * parallel purpose random generator
@@ -75,12 +75,7 @@ public class AOSMOEAD extends MOEAD implements IAOS {
      * Name to id the hyper-heuristic
      */
     private String name;
-
-    /**
-     * The population contribution rewards from the previous iteration
-     */
-    private HashMap<Variation, Credit> prevPopContRewards;
-
+    
     /**
      * Probability that an offspring will mate with neighbors
      */
@@ -90,12 +85,11 @@ public class AOSMOEAD extends MOEAD implements IAOS {
      * Indices for the population
      */
     private final List<Integer> popIndices;
-    
+
     /**
      * History of credits received by each operator
      */
     private final CreditHistory creditHistory;
-    
 
     public AOSMOEAD(Problem problem, int neighborhoodSize,
             Initialization initialization, double delta, double eta, int updateUtility,
@@ -113,23 +107,18 @@ public class AOSMOEAD extends MOEAD implements IAOS {
 
         super.initialize();
 
-        //initialize the previous population contribution rewards to all zero for each heuristic
-        prevPopContRewards = new HashMap<>();
-        for (Variation heur : heuristics) {
-            prevPopContRewards.put(heur, new Credit(0, 0.0));
-        }
-
         popIndices = new ArrayList<>();
         for (int i = 0; i < population.size(); i++) {
             popIndices.add(i);
         }
 
     }
-    
-    public List<Solution> getPopulation(){
+
+    public List<Solution> getPopulation() {
         ArrayList<Solution> out = new ArrayList<>();
-        for(Individual ind:population)
+        for (Individual ind : population) {
             out.add(ind.getSolution());
+        }
         return out;
     }
 
@@ -148,11 +137,12 @@ public class AOSMOEAD extends MOEAD implements IAOS {
             Solution[] parents = new Solution[operator.getArity()];
             Individual parent = population.get(index);
             parents[0] = parent.getSolution();
-            
+
             //decide mating pool
             boolean useNeighborhood = pprng.nextDouble() < delta;
-            if(!useNeighborhood)
+            if (!useNeighborhood) {
                 matingIndices = new ArrayList(popIndices);
+            }
 
             if (operator.getArity() > 2) {
                 // mimic MOEA/D parent selection for differential evolution
@@ -172,7 +162,7 @@ public class AOSMOEAD extends MOEAD implements IAOS {
                 }
             }
             //create new offspring
-            Solution[] offspring= operator.evolve(parents);
+            Solution[] offspring = operator.evolve(parents);
 
             //compute the credit assignment specific rewards
             switch (creditDef.getInputType()) {
@@ -186,10 +176,11 @@ public class AOSMOEAD extends MOEAD implements IAOS {
                         ParentDecomposition OPDe = ((ParentDecomposition) creditDef);
                         OPDe.setWeights(parent.getWeights());
                         OPDe.setIdealPoint(getIdealPoint());
-                        reward += OPDe.compute(child, parents[0], null, null);
+                        reward += OPDe.compute(child, parents[0]);
                     }
-                    if(reward <0)
+                    if (reward < 0) {
                         reward = 0;
+                    }
                     Credit operatorReward = new Credit(this.numberOfEvaluations, reward);
                     operatorSelector.update(operatorReward, operator);
                     creditHistory.add(operator, operatorReward);
@@ -202,8 +193,9 @@ public class AOSMOEAD extends MOEAD implements IAOS {
                         updateSolution(child, matingIndices);
                         rewardSi += updateSolution(child, matingIndices);
                     }
-                    if(rewardSi <0)
+                    if (rewardSi < 0) {
                         reward = 0;
+                    }
                     Credit operatorRewardSi = new Credit(this.numberOfEvaluations, rewardSi);
                     operatorSelector.update(operatorRewardSi, operator);
                     creditHistory.add(operator, operatorRewardSi);
@@ -222,7 +214,7 @@ public class AOSMOEAD extends MOEAD implements IAOS {
                     while (iter.hasNext()) {
                         Variation operator_i = iter.next();
                         operatorSelector.update(contRewards.get(operator_i), operator_i);
-                        creditHistory.add(operator_i, new Credit(this.numberOfEvaluations,contRewards.get(operator_i).getValue()));
+                        creditHistory.add(operator_i, new Credit(this.numberOfEvaluations, contRewards.get(operator_i).getValue()));
                     }
                     break;
                 default:
@@ -231,20 +223,21 @@ public class AOSMOEAD extends MOEAD implements IAOS {
             }
 
             heuristicSelectionHistory.add(operator,this.numberOfEvaluations);
-//            updateQualityHistory();
-            }
-
-            generation++;
-
-            if ((updateUtility >= 0) && (generation % updateUtility == 0)) {
-                updateUtility();
-            }
-
+            updateQualityHistory();
         }
-        /**
-         * Updates the quality history every iteration for each heuristic
-         * according to the INextHeuristic class used
-         */
+
+        generation++;
+
+        if ((updateUtility >= 0) && (generation % updateUtility == 0)) {
+            updateUtility();
+        }
+
+    }
+
+    /**
+     * Updates the quality history every iteration for each heuristic according
+     * to the INextHeuristic class used
+     */
     private void updateQualityHistory() {
         HashMap<Variation, Double> currentQualities = operatorSelector.getQualities();
         for (Variation heuristic : heuristics) {
@@ -253,8 +246,7 @@ public class AOSMOEAD extends MOEAD implements IAOS {
     }
 
     /**
-     * Reset the hyperheuristic. Clear all selection history and the credit
-     * repository
+     * Reset the AOS. Clear all selection history and the credit repository
      */
     @Override
     public void reset() {

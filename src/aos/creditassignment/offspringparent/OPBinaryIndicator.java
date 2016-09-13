@@ -49,15 +49,11 @@ public class OPBinaryIndicator extends AbstractOffspringParent {
      *
      * @param offspring
      * @param parent of the offspring solution
-     * @param pop population is assumed to contain both the parent solution and
-     * the offspring solution
-     * @param removedSolution the solution index that was just removed from the
-     * population
      * @return the positive percent improvement in fitness. If no improvement
      * then return 0.0
      */
     @Override
-    public double compute(Solution offspring, Solution parent, Population pop, Solution removedSolution) {
+    public double compute(Solution offspring, Solution parent) {
         return Math.max(0.0, indicator.compute(parent, offspring));
     }
 

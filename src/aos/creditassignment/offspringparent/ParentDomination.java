@@ -7,10 +7,8 @@ package aos.creditassignment.offspringparent;
 
 import aos.creditassigment.CreditFitnessFunctionType;
 import aos.creditassigment.CreditDefinedOn;
-import org.moeaframework.core.FastNondominatedSorting;
 import org.moeaframework.core.Population;
 import org.moeaframework.core.Solution;
-import org.moeaframework.core.comparator.ParetoConstraintComparator;
 import org.moeaframework.core.comparator.ParetoDominanceComparator;
 
 /**
@@ -65,15 +63,10 @@ public class ParentDomination extends AbstractOffspringParent {
      * @param offspring offspring solutions that will receive credits
      * @param parent the parent solutions to compare the offspring solutions
      * with
-     * @param pop population may be needed to calculate the fitness of the
-     * offspring and parent solutions. This implementation does not utilize this
-     * information
-     * @param removedSolution the solution index that was just removed from the
-     * population. This implementation does not utilize this information
      * @return the value of reward to resulting from the solution
      */
     @Override
-    public double compute(Solution offspring, Solution parent, Population pop, Solution removedSolution) {
+    public double compute(Solution offspring, Solution parent) {
 //        int parentRank = (int) parent.getAttribute(FastNondominatedSorting.RANK_ATTRIBUTE);
 //        int offspringRank = (int) offspring.getAttribute(FastNondominatedSorting.RANK_ATTRIBUTE);
 //        if (parentRank > offspringRank) {
