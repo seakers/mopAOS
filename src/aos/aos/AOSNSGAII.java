@@ -65,7 +65,7 @@ public class AOSNSGAII extends NSGAII implements IAOS {
     /**
      * The set of heuristics that the hyper heuristic is able to work with
      */
-    private final Collection<Variation> heuristics;
+    private final Collection<Variation> operators;
 
     /**
      * The history of the heuristics' qualities over time. Used for analyzing
@@ -96,16 +96,16 @@ public class AOSNSGAII extends NSGAII implements IAOS {
 
     public AOSNSGAII(Problem problem, NondominatedSortingPopulation population,
             EpsilonBoxDominanceArchive archive, Selection selection,
-            Initialization initialization, INextOperator heuristicSelector,
+            Initialization initialization, INextOperator operatorSelector,
             ICreditAssignment creditDef) {
         super(problem, population, archive, selection, null, initialization);
 
-        this.heuristics = heuristicSelector.getOperators();
-        this.operatorSelector = heuristicSelector;
+        this.operators = operatorSelector.getOperators();
+        this.operatorSelector = operatorSelector;
         this.creditDef = creditDef;
-        this.operatorSelectionHistory = new OperatorSelectionHistory(heuristics);
-        this.qualityHistory = new OperatorQualityHistory(heuristics);
-        this.creditHistory = new CreditHistory(heuristics);
+        this.operatorSelectionHistory = new OperatorSelectionHistory(operators);
+        this.qualityHistory = new OperatorQualityHistory(operators);
+        this.creditHistory = new CreditHistory(operators);
         this.pprng = new ParallelPRNG();
         this.removedSolutions = new ArrayList<>();
 
@@ -183,7 +183,7 @@ public class AOSNSGAII extends NSGAII implements IAOS {
                     case PARETOFRONT:
 
                         popContRewards = ((AbstractPopulationContribution) creditDef).
-                                compute(paretofront, heuristics, this.numberOfEvaluations);
+                                compute(paretofront, operators, this.numberOfEvaluations);
 
                         break;
                     default:
@@ -215,7 +215,7 @@ public class AOSNSGAII extends NSGAII implements IAOS {
      */
     private void updateQualityHistory() {
         HashMap<Variation, Double> currentQualities = operatorSelector.getQualities();
-        for (Variation heuristic : heuristics) {
+        for (Variation heuristic : operators) {
             qualityHistory.add(heuristic, currentQualities.get(heuristic));
         }
     }

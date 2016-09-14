@@ -6,10 +6,8 @@
 
 package aos.nextoperator;
 
-import aos.creditassigment.Credit;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Level;

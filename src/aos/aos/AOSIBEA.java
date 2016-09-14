@@ -67,7 +67,7 @@ public class AOSIBEA extends IBEA implements IAOS {
     /**
      * The set of heuristics that the hyper heuristic is able to work with
      */
-    private final Collection<Variation> heuristics;
+    private final Collection<Variation> operators;
     
     /**
      * The history of the heuristics' qualities over time. Used for analyzing
@@ -93,16 +93,16 @@ public class AOSIBEA extends IBEA implements IAOS {
 
     public AOSIBEA(Problem problem, Population population,
             NondominatedPopulation archive, Selection selection,
-            Initialization initialization, IndicatorFitnessEvaluator fitnessEvaluator, INextOperator heuristicSelector,
+            Initialization initialization, IndicatorFitnessEvaluator fitnessEvaluator, INextOperator operatorSelector,
             ICreditAssignment creditDef) {
         super(problem, archive, initialization, null, fitnessEvaluator);
 
-        this.heuristics = heuristicSelector.getOperators();
-        this.operatorSelector = heuristicSelector;
+        this.operators = operatorSelector.getOperators();
+        this.operatorSelector = operatorSelector;
         this.creditDef = creditDef;
-        this.operatorSelectionHistory = new OperatorSelectionHistory(heuristics);
-        this.qualityHistory = new OperatorQualityHistory(heuristics);
-        this.creditHistory = new CreditHistory(heuristics);
+        this.operatorSelectionHistory = new OperatorSelectionHistory(operators);
+        this.qualityHistory = new OperatorQualityHistory(operators);
+        this.creditHistory = new CreditHistory(operators);
         this.pprng = new ParallelPRNG();
 
         //Initialize 
@@ -175,7 +175,7 @@ public class AOSIBEA extends IBEA implements IAOS {
                 switch (creditDef.getOperatesOn()) {
                     case POPULATION:
                         popContRewards = ((AbstractPopulationContribution) creditDef).
-                                compute(prevGen, heuristics, this.numberOfEvaluations);
+                                compute(prevGen, operators, this.numberOfEvaluations);
                         break;
                     default:
                         throw new NullPointerException("Credit definition not "
@@ -208,7 +208,7 @@ public class AOSIBEA extends IBEA implements IAOS {
      */
     private void updateQualityHistory() {
         HashMap<Variation, Double> currentQualities = operatorSelector.getQualities();
-        for (Variation heuristic : heuristics) {
+        for (Variation heuristic : operators) {
             qualityHistory.add(heuristic, currentQualities.get(heuristic));
         }
     }

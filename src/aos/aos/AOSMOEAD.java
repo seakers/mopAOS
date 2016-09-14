@@ -53,7 +53,7 @@ public class AOSMOEAD extends MOEAD implements IAOS {
     /**
      * The set of heuristics that the hyper heuristic is able to work with
      */
-    private final Collection<Variation> heuristics;
+    private final Collection<Variation> operators;
 
     /**
      * The history of the heuristics' qualities over time. Used for analyzing
@@ -95,13 +95,13 @@ public class AOSMOEAD extends MOEAD implements IAOS {
             Initialization initialization, double delta, double eta, int updateUtility,
             INextOperator operatorSelector, ICreditAssignment creditDef) {
         super(problem, neighborhoodSize, initialization, operatorSelector.getOperators().iterator().next(), delta, eta, updateUtility);
-        this.heuristics = operatorSelector.getOperators();
+        this.operators = operatorSelector.getOperators();
         this.operatorSelector = operatorSelector;
         this.creditDef = creditDef;
         this.delta = delta;
-        this.heuristicSelectionHistory = new OperatorSelectionHistory(heuristics);
-        this.creditHistory = new CreditHistory(heuristics);
-        this.qualityHistory = new OperatorQualityHistory(heuristics);
+        this.heuristicSelectionHistory = new OperatorSelectionHistory(operators);
+        this.creditHistory = new CreditHistory(operators);
+        this.qualityHistory = new OperatorQualityHistory(operators);
         this.pprng = new ParallelPRNG();
         this.iteration = 0;
 
@@ -209,7 +209,7 @@ public class AOSMOEAD extends MOEAD implements IAOS {
                         child.setAttribute("heuristic", new SerializableVal(operator.toString()));
                     }
                     DecompositionContribution CDe = ((DecompositionContribution) creditDef);
-                    HashMap<Variation, Credit> contRewards = CDe.compute(getNeighborhoodSolutions(index), heuristics, iteration);
+                    HashMap<Variation, Credit> contRewards = CDe.compute(getNeighborhoodSolutions(index), operators, iteration);
                     Iterator<Variation> iter = contRewards.keySet().iterator();
                     while (iter.hasNext()) {
                         Variation operator_i = iter.next();
@@ -240,7 +240,7 @@ public class AOSMOEAD extends MOEAD implements IAOS {
      */
     private void updateQualityHistory() {
         HashMap<Variation, Double> currentQualities = operatorSelector.getQualities();
-        for (Variation heuristic : heuristics) {
+        for (Variation heuristic : operators) {
             qualityHistory.add(heuristic, currentQualities.get(heuristic));
         }
     }
