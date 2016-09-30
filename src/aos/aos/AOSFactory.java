@@ -5,11 +5,11 @@
  */
 package aos.aos;
 
-import aos.heuristicselectors.AdaptivePursuit;
-import aos.heuristicselectors.FRRMAB;
-import aos.heuristicselectors.ProbabilityMatching;
-import aos.heuristicselectors.RouletteWheel;
-import aos.heuristicselectors.RandomSelect;
+import aos.operatorselectors.AdaptivePursuit;
+import aos.operatorselectors.FRRMAB;
+import aos.operatorselectors.ProbabilityMatching;
+import aos.operatorselectors.RouletteWheel;
+import aos.operatorselectors.RandomSelect;
 import aos.nextoperator.AbstractOperatorSelector;
 import java.util.Collection;
 import org.moeaframework.core.Variation;

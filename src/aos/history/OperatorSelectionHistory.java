@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Stack;
 import org.moeaframework.core.Variation;
 
 /**
@@ -27,9 +26,9 @@ public class OperatorSelectionHistory implements Serializable {
     protected ArrayList<Selection> history;
     protected int totalSelectionCount;
 
-    public OperatorSelectionHistory(Collection<Variation> heuristics) {
+    public OperatorSelectionHistory(Collection<Variation> operators) {
         operatorSelectionCount = new HashMap();
-        Iterator<Variation> iter = heuristics.iterator();
+        Iterator<Variation> iter = operators.iterator();
         while (iter.hasNext()) {
             operatorSelectionCount.put(iter.next(), 0);
         }
@@ -38,11 +37,11 @@ public class OperatorSelectionHistory implements Serializable {
     }
 
     /**
-     * Returns the history of the selected heuristics in the ordered they
+     * Returns the history of the selected operators in the ordered they
      * occurred.
      *
      * @return a stack of Variations which contains the history of the selected
-     * heuristics in the ordered they occurred. Selections at the beginning of
+     * operators in the ordered they occurred. Selections at the beginning of
      * the search are at the top of the Stack.
      */
     public ArrayList<Variation> getOrderedHistory() {
@@ -58,7 +57,7 @@ public class OperatorSelectionHistory implements Serializable {
      * Returns the history of the time the operator was selected
      *
      * @return a stack of Variations which contains the history of the selected
-     * heuristics in the ordered they occurred. Selections at the beginning of
+     * operators in the ordered they occurred. Selections at the beginning of
      * the search are at the top of the Stack.
      */
     public ArrayList<Integer> getOrderedSelectionTime() {
@@ -72,25 +71,32 @@ public class OperatorSelectionHistory implements Serializable {
 
     /**
      * Adds the operator to the history. If the Variation is a sequence of
-     * operators, the operator in the sequence will be added to the history
+     * operators, the operator in the sequence will be added to the history. If
+     * the operator is not currently in the history, it is added to the set of
+     * operators included in this history.
      *
      * @param operator to add to the history
+     * @param timeSelected
      */
     public void add(Variation operator, int timeSelected) {
         history.add(new Selection(operator, timeSelected));
-        operatorSelectionCount.put(operator, operatorSelectionCount.get(operator) + 1);
+        if (operatorSelectionCount.containsKey(operator)) {
+            operatorSelectionCount.put(operator, operatorSelectionCount.get(operator) + 1);
+        } else {
+            operatorSelectionCount.put(operator, 1);
+        }
         totalSelectionCount++;
     }
 
     /**
-     * Gets the number of times the specified heuristic was selected using the
+     * Gets the number of times the specified operator was selected using the
      * history's memory
      *
-     * @param heuristic
+     * @param operator
      * @return
      */
-    public int getSelectedTimes(Variation heuristic) {
-        return operatorSelectionCount.get(heuristic);
+    public int getSelectedTimes(Variation operator) {
+        return operatorSelectionCount.get(operator);
     }
 
     /**
@@ -106,7 +112,7 @@ public class OperatorSelectionHistory implements Serializable {
 
     /**
      * Returns the number of selections made so far. This is the sum of the
-     * selection counts for each heuristic across all heuristics
+     * selection counts for each operator across all operators
      *
      * @return the total number of selections made so far
      */
@@ -115,9 +121,9 @@ public class OperatorSelectionHistory implements Serializable {
     }
 
     /**
-     * Gets the heuristics involved in the selection process
+     * Gets the operators involved in the selection process
      *
-     * @return a collection containing the heuristics involved in the selection
+     * @return a collection containing the operators involved in the selection
      * process
      */
     public Collection<Variation> getOperators() {

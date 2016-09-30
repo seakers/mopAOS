@@ -24,7 +24,7 @@ public class CreditHistory implements Serializable {
     private static final long serialVersionUID = -2323214225020219554L;
 
     protected HashMap<Variation, ArrayList<Credit>> history;
-    
+
     private int maxIteration = 0;
 
     public CreditHistory(Collection<Variation> operators) {
@@ -41,20 +41,25 @@ public class CreditHistory implements Serializable {
 
     /**
      * Add a reward to the history. Credit is tagged with iteration from when
- the reward is issued
+     * the reward is issued. If the operator is not currently in the history, it
+     * is added to the set of operators included in this history.
      *
-     * @param heuristic
+     * @param operator
      * @param reward
      */
-    public void add(Variation heuristic, Credit reward) {
-        history.get(heuristic).add(reward);
+    public void add(Variation operator, Credit reward) {
+        if (!history.containsKey(operator)) {
+            history.put(operator, new ArrayList());
+        }
+        history.get(operator).add(reward);
         maxIteration = Math.max(maxIteration, reward.getIteration());
     }
 
     /**
      * Returns the collection of rewards received by a specific operator
+     *
      * @param operator
-     * @return 
+     * @return
      */
     public Collection<Credit> getHistory(Variation operator) {
         return history.get(operator);
@@ -62,7 +67,8 @@ public class CreditHistory implements Serializable {
 
     /**
      * Returns a map of the last rewards received by each operator
-     * @return 
+     *
+     * @return
      */
     public HashMap<Variation, Credit> getLatest() {
         HashMap<Variation, Credit> out = new HashMap<>();
@@ -76,16 +82,17 @@ public class CreditHistory implements Serializable {
      * Clears the history for all operators.
      */
     public void clear() {
-        for (Variation heuristic : getOperators()) {
-            history.get(heuristic).clear();
+        for (Variation operator : getOperators()) {
+            history.get(operator).clear();
         }
     }
-    
+
     /**
      * Returns the iteration that the latest rewarded was given
-     * @return 
+     *
+     * @return
      */
-    public int getMaxIteration(){
+    public int getMaxIteration() {
         return maxIteration;
     }
 }

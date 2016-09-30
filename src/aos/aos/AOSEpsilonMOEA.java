@@ -21,8 +21,8 @@ import java.util.Iterator;
 import org.moeaframework.algorithm.EpsilonMOEA;
 import org.moeaframework.core.EpsilonBoxDominanceArchive;
 import org.moeaframework.core.Initialization;
-import org.moeaframework.core.NondominatedSortingPopulation;
 import org.moeaframework.core.ParallelPRNG;
+import org.moeaframework.core.Population;
 import org.moeaframework.core.Problem;
 import org.moeaframework.core.Selection;
 import org.moeaframework.core.Solution;
@@ -85,7 +85,7 @@ public class AOSEpsilonMOEA extends EpsilonMOEA implements IAOS {
      */
     private String name;
 
-    public AOSEpsilonMOEA(Problem problem, NondominatedSortingPopulation population,
+    public AOSEpsilonMOEA(Problem problem, Population population,
             EpsilonBoxDominanceArchive archive, Selection selection,
             Initialization initialization, INextOperator operatorSelector,
             ICreditAssignment creditDef) {
@@ -107,7 +107,7 @@ public class AOSEpsilonMOEA extends EpsilonMOEA implements IAOS {
     @Override
     public void iterate() {
         //select next heuristic
-        Variation operator = operatorSelector.nextHeuristic();
+        Variation operator = operatorSelector.nextOperator();
         operatorSelectionHistory.add(operator, this.numberOfEvaluations);
 
         Solution[] parents = selection.select(operator.getArity(),

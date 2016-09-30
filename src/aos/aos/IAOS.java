@@ -14,30 +14,30 @@ import aos.creditassigment.ICreditAssignment;
 import org.moeaframework.core.Algorithm;
 
 /**
- * Hyperheuristic is the framework using a credit assignment and heuristic selection strategy 
+ * AOS is the framework using a credit assignment and operator selection strategy 
  * @author nozomihitomi
  */
 public interface IAOS extends Algorithm{
     
     /**
-     * Returns the selection history stored in the hyper-heuristic
+     * Returns the selection history stored in the hyper-operator
      * @return 
      */
     public OperatorSelectionHistory getSelectionHistory();
     
     /**
-     * Resets the hyperheuristic so that it can run again for another seed.
+     * Resets the adaptive operator selector so that it can run again for another seed.
      */
     public void reset();
     
     /**
-     * gets the quality history stored for each heuristic in the hyper-heuristic
+     * gets the quality history stored for each operator in the hyper-operator
      * @return 
      */
     public OperatorQualityHistory getQualityHistory();
     
     /**
-     * gets the credit history stored for each operator in the hyper-heuristic
+     * gets the credit history stored for each operator in the hyper-operator
      *
      * @return
      */
@@ -50,20 +50,20 @@ public interface IAOS extends Algorithm{
     public ICreditAssignment getCreditDefinition();
     
     /**
-     * Gets the strategy that is used to generate or select the next heuristic 
+     * Gets the strategy that is used to generate or select the next operator 
      * @return 
      */
     public INextOperator getNextHeuristicSupplier();
     
     
     /**
-     * Sets the hyper-heuristic's name
+     * Sets the adaptive operator selector's name
      * @param name
      */
     public void setName(String name);
     
     /**
-     * Gets the hyper-heuristic's name
+     * Gets the adaptive operator selector's name
      * @return 
      */
     public String getName();

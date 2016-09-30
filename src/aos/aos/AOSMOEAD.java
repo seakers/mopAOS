@@ -130,7 +130,7 @@ public class AOSMOEAD extends MOEAD implements IAOS {
         for (Integer index : indices) {
             iteration++;
             //select next heuristic
-            Variation operator = operatorSelector.nextHeuristic();
+            Variation operator = operatorSelector.nextOperator();
 
             List<Integer> matingIndices = getMatingIndices(index);
 

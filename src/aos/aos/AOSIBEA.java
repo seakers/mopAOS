@@ -123,7 +123,7 @@ public class AOSIBEA extends IBEA implements IAOS {
         while (offspring.size() < populationSize) {
 
             //select next heuristic
-            Variation operator = operatorSelector.nextHeuristic();
+            Variation operator = operatorSelector.nextOperator();
             operatorSelectionHistory.add(operator, this.numberOfEvaluations);
 
             Solution[] parents = selection.select(operator.getArity(),
