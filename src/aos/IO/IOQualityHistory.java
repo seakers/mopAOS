@@ -36,7 +36,7 @@ public class IOQualityHistory {
      * @param separator the type of separator desired
      * @return true if the save is successful
      */
-    public static boolean saveHistory(OperatorQualityHistory qualityHistory,String filename,String separator) {
+    public boolean saveHistory(OperatorQualityHistory qualityHistory,String filename,String separator) {
         try(FileWriter fw = new FileWriter(new File(filename))){
             Iterator<Variation> heuristicIter = qualityHistory.getOperators().iterator();
             while(heuristicIter.hasNext()){
@@ -67,7 +67,7 @@ public class IOQualityHistory {
      * @param qualityHistory The quality history  to save
      * @param filename filename including the path and the extension.
      */
-    public static void saveHistory(OperatorQualityHistory qualityHistory,String filename){
+    public void saveHistory(OperatorQualityHistory qualityHistory,String filename){
         try(ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(filename));){
             os.writeObject(qualityHistory);
             os.close();
@@ -81,7 +81,7 @@ public class IOQualityHistory {
      * @param filename the file name (path and extension included)
      * @return the OperatorQualityHistory instance saved by using saveHistory()
      */
-    public static OperatorQualityHistory loadHistory(String filename){
+    public OperatorQualityHistory loadHistory(String filename){
         OperatorQualityHistory hist = null;
         try(ObjectInputStream is = new ObjectInputStream( new FileInputStream( filename ))){
            hist = (OperatorQualityHistory)is.readObject();

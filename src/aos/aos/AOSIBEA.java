@@ -84,8 +84,6 @@ public class AOSIBEA extends IBEA implements IAOS {
 
     private double[] lowerbound;
 
-    private final NondominatedPopulation paretofront;
-
     /**
      * Name to id the hyper-heuristic
      */
@@ -104,10 +102,6 @@ public class AOSIBEA extends IBEA implements IAOS {
         this.qualityHistory = new OperatorQualityHistory(operators);
         this.creditHistory = new CreditHistory(operators);
         this.pprng = new ParallelPRNG();
-
-        //Initialize 
-        super.initialize();
-        paretofront = new NondominatedPopulation(getPopulation());
 
     }
 

@@ -5,6 +5,7 @@
  */
 package aos.operatorselectors.replacement;
 
+import aos.aos.IAOS;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -41,22 +42,21 @@ public abstract class AbstractOperatorRemover implements OperatorRemover {
      * collection of operators do not contain any permanent operators that
      * cannot be removed from the adaptive operator selector.
      *
-     * @param nevals the current number of evaluations used
-     * @param qualities the qualities of each operator
+     * @param aos the adaptive operator selector
      * @return The collection of operators to remove
      */
     @Override
-    public Collection<Variation> selectOperators(int nevals, HashMap<Variation, Double> qualities) {
+    public Collection<Variation> selectOperators(IAOS aos) {
         ArrayList<Variation> out = new ArrayList();
-
+        HashMap<Variation, Double> qualities = aos.getNextHeuristicSupplier().getQualities();
         HashMap<Variation, Double> operatorMetric = new HashMap<>(qualities.size());
         for (Variation operator : qualities.keySet()) {
-            if (permanentOperators.contains(operator)) {
-                operatorMetric.put(operator, computeMetric(nevals, qualities.get(operator)));
+            if (!permanentOperators.contains(operator)) {
+                operatorMetric.put(operator, computeMetric(operator, aos));
             }
         }
 
-        while (!finished()) {
+        while (!finished(operatorMetric.size())) {
             Variation operatorToRemove = getNextLowest(operatorMetric);
             out.add(operatorToRemove);
             operatorMetric.remove(operatorToRemove);
@@ -67,22 +67,24 @@ public abstract class AbstractOperatorRemover implements OperatorRemover {
 
     /**
      * Check to see when the method is done selecting operators that need to be
-     * replaced
+     * replaced.
      *
+     * @param numOperators number of operators to select from to remove
+     * operators. number should not count the number of permanent operators
      * @return true if the selection of operators is finished. False otherwise.
      */
-    protected abstract boolean finished();
+    protected abstract boolean finished(int numOperators);
 
     /**
      * Computes a performance metric of an operator based on the current number
      * of function evaluations used so far and the quality of the operator. The
      * operator remover will remove the operators with the lowest valued metrics
      *
-     * @param nevals the number of evaluations used so far
-     * @param quality the quality of the operator
+     * @param aos the adaptive operator selector
+     * @param operator the operator to compute the metric for
      * @return the operator selected for removal
      */
-    protected abstract double computeMetric(int nevals, double quality);
+    protected abstract double computeMetric(Variation operator, IAOS aos);
 
     /**
      * Scans over the metrics of each operator and retrieves the one with the

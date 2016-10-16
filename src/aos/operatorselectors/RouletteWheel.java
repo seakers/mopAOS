@@ -13,10 +13,10 @@ import java.util.Iterator;
 import org.moeaframework.core.Variation;
 
 /**
- * Selects heuristics based on probability which is proportional to the
- * heuristics credits. Each heuristic gets selected with a minimum probability
+ * Selects operators based on probability which is proportional to the
+ * operators credits. Each operator gets selected with a minimum probability
  * of pmin. If current credits in credit repository becomes negative, zero
- * credit is re-assigned to that heuristic. For the first iteration, heuristics
+ * credit is re-assigned to that operator. For the first iteration, operators
  * are selected with uniform probability.
  *
  * @author nozomihitomi
@@ -24,31 +24,31 @@ import org.moeaframework.core.Variation;
 public class RouletteWheel extends AbstractOperatorSelector {
 
     /**
-     * Hashmap to store the selection probabilities of each heuristic
+     * Hashmap to store the selection probabilities of each operator
      */
     protected HashMap<Variation, Double> probabilities;
 
     /**
-     * The minimum probability for a heuristic to be selected
+     * The minimum probability for a operator to be selected
      */
     protected final double pmin;
 
     /**
      * Constructor to initialize probability map for selection
      *
-     * @param heuristics from which to select from
-     * @param pmin The minimum probability for a heuristic to be selected
+     * @param operators from which to select from
+     * @param pmin The minimum probability for a operator to be selected
      */
-    public RouletteWheel(Collection<Variation> heuristics, double pmin) {
-        super(heuristics);
+    public RouletteWheel(Collection<Variation> operators, double pmin) {
+        super(operators);
         this.pmin = pmin;
         this.probabilities = new HashMap();
         reset();
     }
 
     /**
-     * Will return the next heuristic that gets selected based on probability
-     * proportional to a heuristics credits. Each heuristic gets selected with a
+     * Will return the next operator that gets selected based on probability
+     * proportional to a operators credits. Each operator gets selected with a
      * minimum probability of pmin
      *
      * @return
@@ -58,30 +58,30 @@ public class RouletteWheel extends AbstractOperatorSelector {
         double p = pprng.nextDouble();
         Iterator<Variation> iter = probabilities.keySet().iterator();
         double sum = 0.0;
-        Variation heuristic = null;
+        Variation operator = null;
         while (iter.hasNext()) {
-            heuristic = iter.next();
-            sum += probabilities.get(heuristic);
+            operator = iter.next();
+            sum += probabilities.get(operator);
             if (sum >= p) {
                 break;
             }
         }
         incrementIterations();
-        if (heuristic == null) {
-            throw new NullPointerException("No heuristic was selected by Probability matching heuristic selector. Check probabilities");
+        if (operator == null) {
+            throw new NullPointerException("No operator was selected by Probability matching operator selector. Check probabilities");
         } else {
-            return heuristic;
+            return operator;
         }
     }
 
     /**
-     * calculate the sum of all qualities across the heuristics
+     * calculate the sum of all qualities across the operators
      *
-     * @return the sum of the heuristics' qualities
+     * @return the sum of the operators' qualities
      */
     protected double sumQualities() {
         double sum = 0.0;
-        Iterator<Variation> iter = probabilities.keySet().iterator();
+        Iterator<Variation> iter = qualities.keySet().iterator();
         while (iter.hasNext()) {
             sum += qualities.get(iter.next());
         }
@@ -98,7 +98,7 @@ public class RouletteWheel extends AbstractOperatorSelector {
         probabilities.clear();
         Iterator<Variation> iter = operators.iterator();
         while (iter.hasNext()) {
-            //all heuristics get uniform selection probability at beginning
+            //all operators get uniform selection probability at beginning
             probabilities.put(iter.next(), 1.0 / (double) operators.size());
         }
     }
@@ -109,38 +109,47 @@ public class RouletteWheel extends AbstractOperatorSelector {
     }
 
     /**
-     * Updates the selection probabilities of the heuristics according to the
-     * qualities of each heuristic.
+     * Updates the selection probabilities of the operators according to the
+     * qualities of each operator.
      */
     protected void updateProbabilities(){
         double sum = sumQualities();
 
-        // if the credits sum up to zero, apply uniform probabilty to  heuristics
+        // if the credits sum up to zero, apply uniform probabilty to  operators
         Iterator<Variation> iter = operators.iterator();
         if (Math.abs(sum) < Math.pow(10.0, -14)) {
             while (iter.hasNext()) {
-                Variation heuristic_i = iter.next();
-                probabilities.put(heuristic_i, 1.0 / (double) operators.size());
+                Variation operator_i = iter.next();
+                probabilities.put(operator_i, 1.0 / (double) operators.size());
             }
         } else { //else update probabilities proportional to quality
             while (iter.hasNext()) {
-                Variation heuristic_i = iter.next();
+                Variation operator_i = iter.next();
                 double newProb = pmin + (1 - probabilities.size() * pmin)
-                        * (qualities.get(heuristic_i) / sum);
-                probabilities.put(heuristic_i, newProb);
+                        * (qualities.get(operator_i) / sum);
+                probabilities.put(operator_i, newProb);
             }
         }
     }
 
     /**
      * Selection probabilities are updated
-     * @param reward given to the heuristic
-     * @param heuristic to be rewarded
+     * @param reward given to the operator
+     * @param operator to be rewarded
      */
     @Override
-    public void update(Credit reward, Variation heuristic) {
-        qualities.put(heuristic, qualities.get(heuristic)+reward.getValue());
+    public void update(Credit reward, Variation operator) {
+        qualities.put(operator, qualities.get(operator)+reward.getValue());
         super.checkQuality();
         updateProbabilities();
     }
+
+    @Override
+    public boolean removeOperator(Variation operator) {
+        boolean out = super.removeOperator(operator);
+        probabilities.remove(operator);
+        return out;
+    }
+    
+    
 }

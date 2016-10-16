@@ -18,23 +18,27 @@ import org.moeaframework.core.Solution;
 public class AbstractRewardDefintion implements ICreditAssignment {
 
     protected CreditFunctionInputType inputType;
-    
+
     protected CreditFitnessFunctionType fitType;
 
     protected CreditDefinedOn operatesOn;
-    
+
     private Solution utopia;
 
     /**
      * stores all the objective values in sorted order to get bounds
      */
-    protected ArrayList<SortedLinkedList<Double>> sortedObjs;
+    protected final ArrayList<SortedLinkedList<Double>> sortedObjs;
+
+    public AbstractRewardDefintion() {
+        this.sortedObjs = new ArrayList<>();
+    }
 
     @Override
     public CreditFunctionInputType getInputType() {
         return inputType;
     }
-    
+
     @Override
     public CreditFitnessFunctionType getFitnessType() {
         return fitType;
@@ -44,7 +48,6 @@ public class AbstractRewardDefintion implements ICreditAssignment {
     public CreditDefinedOn getOperatesOn() {
         return operatesOn;
     }
-
 
     /**
      * Finds the utopia point in the population
@@ -65,7 +68,8 @@ public class AbstractRewardDefintion implements ICreditAssignment {
     }
 
     /**
-     * Updates the utopia based on the new incoming solution. This method assumes that the utopia point never deteriorates
+     * Updates the utopia based on the new incoming solution. This method
+     * assumes that the utopia point never deteriorates
      *
      * @param offspring new solution entering the population
      * @return the updated utopia point
@@ -93,11 +97,11 @@ public class AbstractRewardDefintion implements ICreditAssignment {
         }
         return normalizedObjs;
     }
-    
+
     //Computes the bounds on population
-    protected void computeBounds(Population pop){
-        sortedObjs = new ArrayList<>(pop.get(0).getNumberOfObjectives());
-        for(int i = 0; i < pop.get(0).getNumberOfObjectives(); i++) {
+    protected void computeBounds(Population pop) {
+        sortedObjs.clear();
+        for (int i = 0; i < pop.get(0).getNumberOfObjectives(); i++) {
             ArrayList<Double> objs = new ArrayList(pop.size());
             for (Solution soln : pop) {
                 objs.add(soln.getObjective(i));
@@ -105,7 +109,7 @@ public class AbstractRewardDefintion implements ICreditAssignment {
             sortedObjs.add(new SortedLinkedList<>(objs, new DoubleComparator()));
         }
     }
-    
+
     //updates the bounds based on a solution exiting the population
     protected void updateBoundsRemove(Solution removedSoln) {
         for (int i = 0; i < removedSoln.getNumberOfObjectives(); i++) {
@@ -113,21 +117,21 @@ public class AbstractRewardDefintion implements ICreditAssignment {
             sortedObjs.get(i).remove(index);
         }
     }
-    
+
     //updates the bounds based on a solution exiting the population
     protected void updateBoundsInsert(Solution newSolution) {
         for (int i = 0; i < newSolution.getNumberOfObjectives(); i++) {
             sortedObjs.get(i).add(newSolution.getObjective(i));
         }
     }
-    
-    protected void updateBounds(Solution newSolution, Solution oldSolution){
+
+    protected void updateBounds(Solution newSolution, Solution oldSolution) {
         updateBoundsRemove(oldSolution);
         updateBoundsInsert(newSolution);
     }
-    
+
     @Override
-    public void clear(){
+    public void clear() {
         sortedObjs.clear();
     }
 

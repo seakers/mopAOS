@@ -5,7 +5,7 @@
  */
 package aos.operatorselectors.replacement;
 
-import aos.nextoperator.INextOperator;
+import aos.aos.IAOS;
 import java.util.Collection;
 import org.moeaframework.core.Variation;
 
@@ -27,27 +27,72 @@ public class OperatorReplacementStrategy {
      * The strategy that will indicate when to replace operators.
      */
     private final ReplacementTrigger trigger;
+    
+    /**
+     * Operator creator will create new operators during the optimization
+     */
+    private final OperatorCreator operatorCreator;
 
     /**
      * Constructor to build a new operator replacement strategy
      *
-     * @param operatorRemover The strategy to select operators for removal
      * @param trigger The strategy that will indicate when to replace operators.
+     * @param operatorRemover The strategy to select operators for removal
+     * @param operatorCreator Operator creator will create new operators during the optimization
      */
-    public OperatorReplacementStrategy(OperatorRemover operatorRemover, ReplacementTrigger trigger) {
+    public OperatorReplacementStrategy(ReplacementTrigger trigger, OperatorRemover operatorRemover, OperatorCreator operatorCreator) {
         this.operatorRemover = operatorRemover;
         this.trigger = trigger;
+        this.operatorCreator = operatorCreator;
     }
 
-    public boolean checkTrigger(INextOperator selector) {
-        return this.trigger.checkTrigger(selector.getNumberOfIterations(), selector.getQualities());
+    /**
+     * Checks to see if the operators should be removed at this point in time.
+     * @param aos the adaptive operator selector
+     * @return 
+     */
+    public boolean checkTrigger(IAOS aos) {
+        return this.trigger.checkTrigger(aos);
     }
 
-    public void removeOperators(INextOperator selector) {
-        Collection<Variation> operatorsToRemove = operatorRemover.selectOperators(selector.getNumberOfIterations(), selector.getQualities());
+    /**
+     * Removes the operators from the selector's set of operators
+     * @param aos the adaptive operator selector
+     * @return The operators that were removed
+     */
+    public Collection<Variation> removeOperators(IAOS aos) {
+        Collection<Variation> operatorsToRemove = operatorRemover.selectOperators(aos);
         for (Variation operator : operatorsToRemove) {
-            selector.removeOperator(operator);
+            aos.getNextHeuristicSupplier().removeOperator(operator);
         }
+        return operatorsToRemove;
     }
 
+    /**
+     * Adds a desired number of new operators to the selector's set of operators
+     * @param aos the adaptive operator selector
+     * @param nOperators the desired number of operators to add
+     * @return  The operators that were added
+     */
+    public Collection<Variation> addNewOperator(IAOS aos, int nOperators){
+        Collection<Variation> newOperators = operatorCreator.createOperator(nOperators);
+        for(Variation newOp : newOperators){
+            aos.getNextHeuristicSupplier().addOperator(newOp);
+        }
+        return newOperators;
+    }
+
+    public OperatorRemover getOperatorRemover() {
+        return operatorRemover;
+    }
+
+    public ReplacementTrigger getTrigger() {
+        return trigger;
+    }
+
+    public OperatorCreator getOperatorCreator() {
+        return operatorCreator;
+    }
+    
+    
 }

@@ -100,8 +100,6 @@ public class AOSEpsilonMOEA extends EpsilonMOEA implements IAOS {
         this.pprng = new ParallelPRNG();
         this.selection = selection;
 
-        //Initialize the stored pareto front
-        super.initialize();
     }
 
     @Override
@@ -115,7 +113,7 @@ public class AOSEpsilonMOEA extends EpsilonMOEA implements IAOS {
         Solution[] children = operator.evolve(parents);
 
         evaluateAll(children);
-        
+
         //add all children to population and update
         for (Solution child : children) {
             addToPopulation(child);
@@ -146,14 +144,7 @@ public class AOSEpsilonMOEA extends EpsilonMOEA implements IAOS {
             for (Solution child : children) {
                 //credit definitions operating on PF and archive will 
                 //modify the nondominated population by adding the child to the nondominated population.
-                switch (creditDef.getOperatesOn()) {
-                    case ARCHIVE:
-                        creditValue += ((AbstractOffspringPopulation) creditDef).compute(child, archive);
-                        break;
-                    default:
-                        throw new NullPointerException("Credit definition not "
-                                + "recognized. Used " + creditDef.getInputType() + ".");
-                }
+                creditValue += ((AbstractOffspringPopulation) creditDef).compute(child, archive);
             }
             Credit reward = new Credit(this.numberOfEvaluations, creditValue);
             operatorSelector.update(reward, operator);

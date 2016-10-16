@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import org.moeaframework.core.FrameworkException;
 import org.moeaframework.core.Solution;
@@ -151,5 +152,29 @@ public class CompoundVariation implements Variation, Serializable {
         public String toString(){
             return getName();
         }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 19 * hash + Objects.hashCode(this.operators);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final CompoundVariation other = (CompoundVariation) obj;
+        if (!Objects.equals(this.operators, other.operators)) {
+            return false;
+        }
+        return true;
+    }
+        
+        
 
 }

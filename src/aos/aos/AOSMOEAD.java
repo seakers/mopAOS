@@ -105,8 +105,6 @@ public class AOSMOEAD extends MOEAD implements IAOS {
         this.pprng = new ParallelPRNG();
         this.iteration = 0;
 
-        super.initialize();
-
         popIndices = new ArrayList<>();
         for (int i = 0; i < population.size(); i++) {
             popIndices.add(i);

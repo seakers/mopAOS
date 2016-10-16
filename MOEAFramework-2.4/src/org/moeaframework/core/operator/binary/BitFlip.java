@@ -88,4 +88,28 @@ public class BitFlip implements Variation {
 		return 1;
 	}
 
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 97 * hash + (int) (Double.doubleToLongBits(this.probability) ^ (Double.doubleToLongBits(this.probability) >>> 32));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final BitFlip other = (BitFlip) obj;
+        if (Double.doubleToLongBits(this.probability) != Double.doubleToLongBits(other.probability)) {
+            return false;
+        }
+        return true;
+    }
+        
+        
+
 }

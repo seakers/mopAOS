@@ -5,8 +5,7 @@
  */
 package aos.operatorselectors.replacement;
 
-import java.util.HashMap;
-import org.moeaframework.core.Variation;
+import aos.aos.IAOS;
 
 /**
  *
@@ -19,9 +18,8 @@ public interface ReplacementTrigger {
      * based on the quality of the operators and the number of evaluations so
      * far
      *
-     * @param nevals number of evaluations so far
-     * @param qualities the qualities of the operators
+     * @param aos the adaptive operator selector
      * @return
      */
-    public boolean checkTrigger(int nevals,HashMap<Variation, Double> qualities);
+    public boolean checkTrigger(IAOS aos);
 }

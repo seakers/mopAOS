@@ -21,6 +21,7 @@ import org.moeaframework.core.Variation;
 public abstract class AbstractPopulationContribution extends AbstractRewardDefintion{
     
     public AbstractPopulationContribution(){
+        super();
         inputType = CreditFunctionInputType.CS;
     }
     

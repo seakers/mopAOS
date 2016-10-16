@@ -109,8 +109,6 @@ public class AOSNSGAII extends NSGAII implements IAOS {
         this.pprng = new ParallelPRNG();
         this.removedSolutions = new ArrayList<>();
 
-        //Initialize the stored pareto front
-        super.initialize();
     }
 
     @Override

@@ -255,7 +255,8 @@ public class TestRun implements Callable {
 
         //save operator quality history
         if (Boolean.parseBoolean(properties.getProperties().getProperty("saveOperatorQualityHistory"))) {
-            IOQualityHistory.saveHistory(((IAOS) aos).getQualityHistory(), filename + ".qual");
+            IOQualityHistory ioqh = new IOQualityHistory();
+            ioqh.saveHistory(((IAOS) aos).getQualityHistory(), filename + ".qual");
         }
 
         return aos;

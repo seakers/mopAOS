@@ -18,6 +18,7 @@ import org.moeaframework.core.Solution;
 public abstract class AbstractOffspringParent extends AbstractRewardDefintion{
 
     public AbstractOffspringParent(){
+        super();
         inputType = CreditFunctionInputType.OP;
         fitType = CreditFitnessFunctionType.Do;
     }

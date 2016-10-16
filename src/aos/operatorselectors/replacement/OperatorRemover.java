@@ -5,8 +5,8 @@
  */
 package aos.operatorselectors.replacement;
 
+import aos.aos.IAOS;
 import java.util.Collection;
-import java.util.HashMap;
 import org.moeaframework.core.Variation;
 
 /**
@@ -22,9 +22,8 @@ public interface OperatorRemover {
      * implemented method will rely on operator qualities as an objective to
      * decide which operators should be removed
      *
-     * @param nevals the current number of evaluations used
-     * @param qualities the qualities of each operator
+     * @param aos the adaptive operator selector
      * @return The collection of operators to remove
      */
-    public Collection<Variation> selectOperators(int nevals, HashMap<Variation, Double> qualities);
+    public Collection<Variation> selectOperators(IAOS aos);
 }

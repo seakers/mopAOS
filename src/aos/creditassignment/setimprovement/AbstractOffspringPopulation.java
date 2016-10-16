@@ -18,6 +18,7 @@ import org.moeaframework.core.Solution;
 public abstract class AbstractOffspringPopulation extends AbstractRewardDefintion{
 
     public AbstractOffspringPopulation(){
+        super();
         inputType = CreditFunctionInputType.SI;
     }
     

@@ -5,8 +5,7 @@
  */
 package aos.operatorselectors.replacement;
 
-import java.util.HashMap;
-import org.moeaframework.core.Variation;
+import aos.aos.IAOS;
 
 /**
  * This replacement trigger will detect when an epoch has passed. Each epoch is
@@ -40,15 +39,14 @@ public class EpochTrigger implements ReplacementTrigger {
     /**
      * Returns true if the current number of evaluations belongs to the next
      * epoch
-     *
-     * @param nevals
-     * @param qualities
+     * @param aos the adaptive operator selector
      * @return
      */
     @Override
-    public boolean checkTrigger(int nevals, HashMap<Variation, Double> qualities) {
+    public boolean checkTrigger(IAOS aos) {
+        int nevals = aos.getNumberOfEvaluations();
         if (Math.floorDiv(nevals, epochLength) > lastTriggeredEpoch) {
-            this.lastTriggeredEpoch = nevals;
+            this.lastTriggeredEpoch++;
             return true;
         } else {
             return false;

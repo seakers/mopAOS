@@ -216,6 +216,7 @@ public class Instrumenter extends ProblemBuilder {
 		allowedPackages = new ArrayList<String>();
 		allowedPackages.add("org.moeaframework");
                 allowedPackages.add("hh");
+                allowedPackages.add("aos");
 		allowedPackages.addAll(Arrays.asList(Settings.getAllowedPackages()));
 	}
 	
@@ -699,7 +700,7 @@ public class Instrumenter extends ProblemBuilder {
 	public InstrumentedAlgorithm instrument(Algorithm algorithm) {
 		List<Collector> collectors = new ArrayList<Collector>();
 		
-		if (includeHypervolume || includeGenerationalDistance || 
+		if (includeHypervolume || includeHypervolumeJmetal || includeGenerationalDistance || 
 				includeInvertedGenerationalDistance || includeSpacing ||
 				includeAdditiveEpsilonIndicator || includeContribution ||
 				includeR1 || includeR2 || includeR3) {
