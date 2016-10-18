@@ -42,7 +42,6 @@ public class FastHypervolume extends NormalizedIndicator{
 
   public FastHypervolume(Problem problem, NondominatedPopulation referenceSet, Solution referencePoint) {
       super(problem, referenceSet);
-    referencePoint_ = null ;
     numberOfObjectives_ = 0 ;
     this.referencePoint_ = referencePoint;
   }

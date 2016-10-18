@@ -18,6 +18,7 @@ import aos.nextoperator.INextOperator;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import org.apache.commons.lang3.ArrayUtils;
 import org.moeaframework.algorithm.EpsilonMOEA;
 import org.moeaframework.core.EpsilonBoxDominanceArchive;
 import org.moeaframework.core.Initialization;
@@ -108,8 +109,18 @@ public class AOSEpsilonMOEA extends EpsilonMOEA implements IAOS {
         Variation operator = operatorSelector.nextOperator();
         operatorSelectionHistory.add(operator, this.numberOfEvaluations);
 
-        Solution[] parents = selection.select(operator.getArity(),
-                population);
+        Solution[] parents;
+        //select one parent from the archive and the rest from the population
+        if (archive.size() <= 1) {
+            parents = selection.select(operator.getArity(), population);
+        } else {
+            parents = ArrayUtils.add(
+                    selection.select(operator.getArity() - 1, population),
+                    archive.get(pprng.nextInt(archive.size())));
+        }
+        
+        pprng.shuffle(parents);
+        
         Solution[] children = operator.evolve(parents);
 
         evaluateAll(children);
