@@ -22,7 +22,7 @@ public class AdaptivePursuit extends ProbabilityMatching {
     /**
      * The maximum probability that the heuristic with the highest credits can
      * be selected. It is implicitly defined as 1.0 - m*pmin where m is the
-     * number of heuristics used and pmin is the minimum selection probability
+     * number of operators used and pmin is the minimum selection probability
      */
     double pmax;
 
@@ -34,16 +34,16 @@ public class AdaptivePursuit extends ProbabilityMatching {
     /**
      * Constructor to initialize adaptive pursuit map for selection. The maximum
      * selection probability is implicitly defined as 1.0 - m*pmin where m is
-     * the number of heuristics defined in the given credit repository and pmin
+     * the number of operators defined in the given credit repository and pmin
      * is the minimum selection probability
      *
-     * @param heuristics from which to select from 
+     * @param operators from which to select from 
      * @param alpha the adaptation rate
      * @param beta the learning rate
      * @param pmin the minimum selection probability
      */
-    public AdaptivePursuit(Collection<Variation> heuristics, double alpha, double beta, double pmin) {
-        super(heuristics, alpha, pmin);
+    public AdaptivePursuit(Collection<Variation> operators, double alpha, double beta, double pmin) {
+        super(operators, alpha, pmin);
         this.pmax = 1 - (probabilities.size() - 1) * pmin;
         this.beta = beta;
         if (pmax < pmin) {
@@ -52,11 +52,11 @@ public class AdaptivePursuit extends ProbabilityMatching {
         }
 
         //Initialize the probabilities such that a random heuristic gets the pmax
-        int heurisitic_lead = pprng.nextInt(probabilities.size());
+        int operator_lead = pprng.nextInt(probabilities.size());
         Iterator<Variation> iter = probabilities.keySet().iterator();
         int count = 0;
         while (iter.hasNext()) {
-            if (count == heurisitic_lead) {
+            if (count == operator_lead) {
                 probabilities.put(iter.next(), pmax);
             } else {
                 probabilities.put(iter.next(), pmin);
@@ -69,41 +69,41 @@ public class AdaptivePursuit extends ProbabilityMatching {
      * Updates the probabilities stored in the selector
      */
     @Override
-    public void update(Credit reward, Variation heuristic) {
-        super.update(reward, heuristic);
+    public void update(Credit reward, Variation operator) {
+        super.update(reward, operator);
         updateProbabilities();
     }
 
     /**
-     * Updates the selection probabilities of the heuristics according to the
-     * qualities of each heuristic.
+     * Updates the selection probabilities of the operators according to the
+     * qualities of each operator.
      */
     @Override
     protected void updateProbabilities(){
 
-        Variation leadHeuristic = argMax(qualities.keySet());
+        Variation leadOperator = argMax(qualities.keySet());
 
         Iterator<Variation> iter = operators.iterator();
         while (iter.hasNext()) {
-            Variation heuristic_i = iter.next();
-            double prevProb = probabilities.get(heuristic_i);
-            if (heuristic_i == leadHeuristic) {
-                probabilities.put(heuristic_i, prevProb+beta*(pmax-prevProb));
+            Variation operator_i = iter.next();
+            double prevProb = probabilities.get(operator_i);
+            if (operator_i == leadOperator) {
+                probabilities.put(operator_i, prevProb+beta*(pmax-prevProb));
             } else {
-                probabilities.put(heuristic_i, prevProb+beta*(pmin-prevProb));
+                probabilities.put(operator_i, prevProb+beta*(pmin-prevProb));
             }
         }
     }
 
     /**
-     * Want to find the heuristic that has the maximum quality
+     * Want to find the operator that has the maximum quality
      *
-     * @param heuristic
-     * @return the current quality of the specified heuristic
+     * @param operator
+     * @return the current quality of the specified operator
      */
     @Override
-    protected double function2maximize(Variation heuristic) {
-        return qualities.get(heuristic);
+    protected double function2maximize(Variation operator) {
+        return qualities.get(operator);
     }
 
     @Override

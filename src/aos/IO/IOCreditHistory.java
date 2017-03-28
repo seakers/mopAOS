@@ -14,7 +14,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -46,6 +45,8 @@ public class IOCreditHistory {
         try (FileWriter fw = new FileWriter(new File(filename))) {
             for(Variation oper:operators){
                 Collection<Credit> hist = creditHistory.getHistory(oper);
+                if(hist.isEmpty())
+                    continue;
                 int[] iters = new int[hist.size()];
                 double[] vals = new double[hist.size()];
                 Iterator<Credit> iter = hist.iterator();

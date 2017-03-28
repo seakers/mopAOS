@@ -28,6 +28,8 @@ import org.moeaframework.core.Problem;
 import org.moeaframework.core.Selection;
 import org.moeaframework.core.Solution;
 import org.moeaframework.core.Variation;
+import org.moeaframework.core.comparator.DominanceComparator;
+import aos.operator.CheckParents;
 
 /**
  * This class extends the epsilon MOEA
@@ -100,31 +102,57 @@ public class AOSEpsilonMOEA extends EpsilonMOEA implements IAOS {
         this.creditHistory = new CreditHistory(operators);
         this.pprng = new ParallelPRNG();
         this.selection = selection;
+    }
 
+    public AOSEpsilonMOEA(Problem problem, Population population,
+            EpsilonBoxDominanceArchive archive, Selection selection,
+            Initialization initialization, INextOperator operatorSelector,
+            ICreditAssignment creditDef, DominanceComparator comparator) {
+        super(problem, population, archive, selection, null, initialization, comparator);
+
+        this.operators = operatorSelector.getOperators();
+        this.operatorSelector = operatorSelector;
+        this.creditDef = creditDef;
+        this.operatorSelectionHistory = new OperatorSelectionHistory(operators);
+        this.qualityHistory = new OperatorQualityHistory(operators);
+        this.creditHistory = new CreditHistory(operators);
+        this.pprng = new ParallelPRNG();
+        this.selection = selection;
     }
 
     @Override
     public void iterate() {
-        //select next heuristic
-        Variation operator = operatorSelector.nextOperator();
-        operatorSelectionHistory.add(operator, this.numberOfEvaluations);
+        //only evaluate if children if it meets some criteria
+        boolean flag = false;
 
-        Solution[] parents;
-        //select one parent from the archive and the rest from the population
-        if (archive.size() <= 1) {
-            parents = selection.select(operator.getArity(), population);
-        } else {
-            parents = ArrayUtils.add(
-                    selection.select(operator.getArity() - 1, population),
-                    archive.get(pprng.nextInt(archive.size())));
+        Solution[] parents = null;
+        Variation operator = null;
+
+        while (!flag) {
+            //select next heuristic
+            operator = operatorSelector.nextOperator();
+
+            //select one parent from the archive and the rest from the population
+            if (archive.size() <= 1) {
+                parents = selection.select(operator.getArity(), population);
+            } else {
+                parents = ArrayUtils.add(
+                        selection.select(operator.getArity() - 1, population),
+                        archive.get(pprng.nextInt(archive.size())));
+            }
+            pprng.shuffle(parents);
+            if (operator instanceof CheckParents) {
+                if(((CheckParents)operator).check(parents)){
+                    flag = true;
+                }
+            } else {
+                flag = true;
+            }
         }
-        
-        pprng.shuffle(parents);
-        
+        operatorSelectionHistory.add(operator, this.numberOfEvaluations);
         Solution[] children = operator.evolve(parents);
-
         evaluateAll(children);
-
+        
         //add all children to population and update
         for (Solution child : children) {
             addToPopulation(child);
@@ -171,6 +199,12 @@ public class AOSEpsilonMOEA extends EpsilonMOEA implements IAOS {
 
                     popContRewards = ((AbstractPopulationContribution) creditDef).
                             compute(archive, operators, this.numberOfEvaluations);
+
+                    break;
+                case POPULATION:
+
+                    popContRewards = ((AbstractPopulationContribution) creditDef).
+                            compute(getPopulation(), operators, this.numberOfEvaluations);
 
                     break;
                 default:

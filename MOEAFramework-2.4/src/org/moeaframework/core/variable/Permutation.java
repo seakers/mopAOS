@@ -19,7 +19,7 @@ package org.moeaframework.core.variable;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.moeaframework.core.PRNG;
+import org.moeaframework.core.ParallelPRNG;
 import org.moeaframework.core.Variable;
 
 /**
@@ -33,6 +33,8 @@ public class Permutation implements Variable {
 	 * The permutation array.
 	 */
 	private int[] permutation;
+        
+        private final ParallelPRNG pprng;
 
 	/**
 	 * Constructs a permutation variable with the specified number of
@@ -48,6 +50,8 @@ public class Permutation implements Variable {
 		for (int i = 0; i < size; i++) {
 			permutation[i] = i;
 		}
+                
+                pprng = new ParallelPRNG();
 	}
 
 	/**
@@ -64,6 +68,7 @@ public class Permutation implements Variable {
 
 		//this call is necessary to ensure the invariants hold
 		fromArray(permutation);
+                pprng = new ParallelPRNG();
 	}
 
 	@Override
@@ -207,7 +212,7 @@ public class Permutation implements Variable {
 
 	@Override
 	public void randomize() {
-		PRNG.shuffle(permutation);
+		pprng.shuffle(permutation);
 	}
 
 }
