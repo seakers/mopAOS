@@ -59,8 +59,8 @@ public class ProbabilityMatching extends RouletteWheel {
     public void update(Credit reward, Variation operator) {
         double newQuality = (1-alpha)*qualities.get(operator) + reward.getValue();
         qualities.put(operator, newQuality);
-        super.checkQuality();
-        super.updateProbabilities();
+        checkQuality();
+        updateProbabilities();
     }
     
     

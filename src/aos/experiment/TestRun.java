@@ -65,7 +65,7 @@ public class TestRun implements Callable {
     private ICreditAssignment creditDef;
     protected double[] epsilonDouble;
     protected int maxEvaluations;
-    private final Collection<Variation> heuristics;
+    private final Collection<Variation> operators;
     protected final NondominatedPopulation referenceSet;
     protected Solution refPointObj;
 
@@ -82,7 +82,7 @@ public class TestRun implements Callable {
     public TestRun(String path, Problem problem, String probName, NondominatedPopulation referenceSet, TypedProperties properties,
             Collection<Variation> heuristics, int maxEvaluations) {
 
-        this.heuristics = heuristics;
+        this.operators = heuristics;
         this.properties = properties;
         this.problem = problem;
         this.epsilonDouble = properties.getDoubleArray("ArchiveEpsilon",
@@ -114,7 +114,7 @@ public class TestRun implements Callable {
         TournamentSelection selection = new TournamentSelection(fitnessComparator);
 
         //all other properties use default parameters
-        INextOperator selector = AOSFactory.getInstance().getHeuristicSelector(properties.getString("AOS", null), properties, heuristics);
+        INextOperator selector = AOSFactory.getInstance().getOperatorSelector(properties.getString("AOS", null), properties, operators);
 
         AOSIBEA aosibea = new AOSIBEA(problem, population, null, selection,
                 initialization, fitnesseval, selector, creditDef);
@@ -141,7 +141,7 @@ public class TestRun implements Callable {
                         new CrowdingComparator()));
 
         //all other properties use default parameters
-        INextOperator selector = AOSFactory.getInstance().getHeuristicSelector(properties.getString("AOS", null), properties, heuristics);
+        INextOperator selector = AOSFactory.getInstance().getOperatorSelector(properties.getString("AOS", null), properties, operators);
 
         AOSNSGAII aosnsgaii = new AOSNSGAII(problem, population, null, selection,
                 initialization, selector, creditDef);
@@ -172,7 +172,7 @@ public class TestRun implements Callable {
 
         int updateUtility = properties.getInt("updateUtility", 50);
 
-        INextOperator selector = AOSFactory.getInstance().getHeuristicSelector(properties.getString("AOS", null), properties, heuristics);
+        INextOperator selector = AOSFactory.getInstance().getOperatorSelector(properties.getString("AOS", null), properties, operators);
 
         AOSMOEAD moeadhh = new AOSMOEAD(problem, neighborhoodSize, initialization,
                 delta, eta, updateUtility, selector, creditDef);

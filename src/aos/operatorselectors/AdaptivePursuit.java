@@ -71,7 +71,15 @@ public class AdaptivePursuit extends ProbabilityMatching {
     @Override
     public void update(Credit reward, Variation operator) {
         super.update(reward, operator);
-        updateProbabilities();
+    }
+    
+    /**
+     * Clears the credit repository and resets the selection probabilities and updates the p_max
+     */
+    @Override
+    public void reset() {
+        super.reset();
+        this.pmax = 1 - (probabilities.size() - 1) * pmin; 
     }
 
     /**

@@ -92,7 +92,7 @@ public class RouletteWheel extends AbstractOperatorSelector {
      * Clears the credit repository and resets the selection probabilities
      */
     @Override
-    public final void reset() {
+    public void reset() {
         super.resetQualities();
         super.reset();
         probabilities.clear();

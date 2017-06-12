@@ -8,9 +8,9 @@ package aos.aos;
 import aos.operatorselectors.AdaptivePursuit;
 import aos.operatorselectors.FRRMAB;
 import aos.operatorselectors.ProbabilityMatching;
-import aos.operatorselectors.RouletteWheel;
 import aos.operatorselectors.RandomSelect;
 import aos.nextoperator.AbstractOperatorSelector;
+import aos.operatorselectors.AllOperators;
 import java.util.Collection;
 import org.moeaframework.core.Variation;
 import org.moeaframework.util.TypedProperties;
@@ -44,17 +44,20 @@ public class AOSFactory {
             return instance;
     }
     
-    public AbstractOperatorSelector getHeuristicSelector(String name, TypedProperties properties,Collection<Variation> heuristics){
-        AbstractOperatorSelector heuristicSelector = null;
+    public AbstractOperatorSelector getOperatorSelector(String name, TypedProperties properties,Collection<Variation> operators){
+        AbstractOperatorSelector operatorSelector = null;
         
         switch(name){
             case "Random": //uniform random selection
-                heuristicSelector = new RandomSelect(heuristics);
+                operatorSelector = new RandomSelect(operators);
+                break;
+            case "All": //use all operators in a random order
+                operatorSelector = new AllOperators(operators);
                 break;
             case "PM":{ //Probability matching
                 double pmin = properties.getDouble("pmin", 0.1);
                 double alpha = properties.getDouble("alpha", 0.8);
-                heuristicSelector = new ProbabilityMatching(heuristics,alpha,pmin);
+                operatorSelector = new ProbabilityMatching(operators,alpha,pmin);
                 }
                 break;
             case "AP":{ //Adaptive Pursuit
@@ -62,19 +65,19 @@ public class AOSFactory {
                 
                 double alpha = properties.getDouble("alpha", 0.8);
                 double beta = properties.getDouble("beta", 0.8);
-                heuristicSelector = new AdaptivePursuit(heuristics, alpha, beta,pmin);
+                operatorSelector = new AdaptivePursuit(operators, alpha, beta,pmin);
                 }
                 break;
             case "FRRMAB":{
                 double c = properties.getDouble("c", 0.5);
                 int windowSize = properties.getInt("frrmab.windowsize",100);
                 double d = properties.getDouble("d", 1);
-                heuristicSelector = new FRRMAB(heuristics, c, windowSize,d);
+                operatorSelector = new FRRMAB(operators, c, windowSize,d);
             }
             break;
-            default: throw new IllegalArgumentException("Invalid heuristic selector specified:" + name);
+            default: throw new IllegalArgumentException("Invalid operator selector specified:" + name);
         }
         
-        return heuristicSelector;
+        return operatorSelector;
     }
 }

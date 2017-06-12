@@ -142,8 +142,10 @@ public class AOSEpsilonMOEA extends EpsilonMOEA implements IAOS {
             }
             pprng.shuffle(parents);
             if (operator instanceof CheckParents) {
-                if(((CheckParents)operator).check(parents)){
+                if (((CheckParents) operator).check(parents)) {
                     flag = true;
+                }else{
+                    operatorSelector.update(new Credit(this.numberOfEvaluations, 0.0), operator);
                 }
             } else {
                 flag = true;
@@ -152,7 +154,7 @@ public class AOSEpsilonMOEA extends EpsilonMOEA implements IAOS {
         operatorSelectionHistory.add(operator, this.numberOfEvaluations);
         Solution[] children = operator.evolve(parents);
         evaluateAll(children);
-        
+
         //add all children to population and update
         for (Solution child : children) {
             addToPopulation(child);

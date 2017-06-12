@@ -19,6 +19,11 @@ public class EpochTrigger implements ReplacementTrigger {
      * The number of evaluations that define one epoch
      */
     private final int epochLength;
+    
+    /**
+     * offset trigger by the number of function evaluations
+     */
+    private final int offset;
 
     /**
      * The evaluation count when the epochtrigger was triggered last
@@ -29,11 +34,25 @@ public class EpochTrigger implements ReplacementTrigger {
      * The constructor to create a new EpochTrigger that detects if an epoch has
      * elapsed.
      *
-     * @param epochLength
+     * @param epochLength The number of evaluations that define one epoch
      */
     public EpochTrigger(int epochLength) {
         this.epochLength = epochLength;
         this.lastTriggeredEpoch = 0;
+        this.offset = 0;
+    }
+    
+    /**
+     * The constructor to create a new EpochTrigger that detects if an epoch has
+     * elapsed.
+     *
+     * @param epochLength The number of evaluations that define one epoch
+     * @param offset the number of function evaluations to offset the trigger by
+     */
+    public EpochTrigger(int epochLength, int offset) {
+        this.epochLength = epochLength;
+        this.lastTriggeredEpoch = 0;
+        this.offset = offset;
     }
 
     /**
@@ -45,7 +64,7 @@ public class EpochTrigger implements ReplacementTrigger {
     @Override
     public boolean checkTrigger(IAOS aos) {
         int nevals = aos.getNumberOfEvaluations();
-        if (Math.floorDiv(nevals, epochLength) > lastTriggeredEpoch) {
+        if (Math.floorDiv(nevals-offset, epochLength) > lastTriggeredEpoch) {
             this.lastTriggeredEpoch++;
             return true;
         } else {
