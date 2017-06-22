@@ -11,6 +11,7 @@ import aos.history.CreditHistory;
 import aos.history.OperatorQualityHistory;
 import aos.history.OperatorSelectionHistory;
 import aos.nextoperator.IOperatorSelector;
+import aos.operator.AOSVariation;
 import java.util.Map;
 import org.moeaframework.algorithm.AbstractEvolutionaryAlgorithm;
 import org.moeaframework.core.NondominatedPopulation;
@@ -65,6 +66,9 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
      */
     private String name;
 
+    /**
+     * The operator that takes on the other operators' methods
+     */
     private final AOSVariation adaptiveOperator;
 
     /**
@@ -80,12 +84,14 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
     /**
      * Var
      *
-     * @param var a dummy variation that must be given to the EA. It is
-     * reassigned to the given operators during the search by the AOS
+     * 
      * @param ea the evolutionary algorithm
+     * @param aosVariation the aos variation that must be given to the EA. It is
+     * reassigned to the given operators during the search by the AOS
      * @param strategy the credit assignment and operator selection strategies
      */
-    public AOSMOEA(Variation var, AbstractEvolutionaryAlgorithm ea,
+    public AOSMOEA(AbstractEvolutionaryAlgorithm ea,
+            AOSVariation aosVariation,
             AOSStrategy strategy) {
         super(ea.getProblem(), ea.getPopulation(), ea.getArchive(), null);
         this.creditAssignment = strategy.getCreditAssignment();
@@ -94,8 +100,7 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
         this.creditHistory = new CreditHistory();
         this.operatorSelectionHistory = new OperatorSelectionHistory();
         this.qualityHistory = new OperatorQualityHistory();
-        this.adaptiveOperator = new AOSVariation();
-        var = this.adaptiveOperator;
+        this.adaptiveOperator = aosVariation;
         this.paretofront = new NondominatedPopulation();
     }
 
@@ -159,8 +164,8 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
 
         //set attributes to all newly created offspring
         for (Solution soln : offspring) {
-            soln.setAttribute(nfeStr, ea.getNumberOfEvaluations());
-            soln.setAttribute(creatorStr, nextOperator.toString());
+            soln.setAttribute(nfeStr, new SerializableVal(ea.getNumberOfEvaluations()));
+            soln.setAttribute(creatorStr, new SerializableVal(nextOperator.toString()));
         }
 
         paretofront.addAll(offspring);
@@ -218,41 +223,6 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
         return name;
     }
 
-    private class AOSVariation implements Variation {
-
-        private Variation var;
-
-        private Solution[] parents;
-
-        private Solution[] offspring;
-
-        @Override
-        public int getArity() {
-            return var.getArity();
-        }
-
-        @Override
-        public Solution[] evolve(Solution[] parents) {
-            this.parents = parents;
-            this.offspring = var.evolve(parents);
-            return this.offspring;
-        }
-
-        public Solution[] getParents() {
-            return parents;
-        }
-
-        public Solution[] getOffspring() {
-            return offspring;
-        }
-
-        public void setVariation(Variation variation) {
-            this.var = variation;
-        }
-
-        public Variation getVariation(Variation variation) {
-            return var;
-        }
-    }
+    
 
 }
