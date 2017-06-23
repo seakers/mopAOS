@@ -5,10 +5,14 @@
  */
 package aos.example;
 
+import aos.IO.IOCreditHistory;
+import aos.IO.IOQualityHistory;
+import aos.IO.IOSelectionHistory;
 import aos.aos.AOSMOEA;
 import aos.aos.AOSStrategy;
 import aos.creditassigment.ICreditAssignment;
 import aos.creditassignment.offspringparent.ParentDomination;
+import aos.creditassignment.setcontribution.ParetoFrontContribution;
 import aos.nextoperator.IOperatorSelector;
 import aos.operator.AOSVariation;
 import aos.operatorselectors.ProbabilityMatching;
@@ -40,14 +44,13 @@ public class TestCase {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
-        
+
         //create the desired problem
         UF1 uf1 = new UF1();
-        
+
         //create the desired algorithm
         int populationSize = 100;
-        AOSVariation variation = new AOSVariation(); 
+        AOSVariation variation = new AOSVariation();
         NondominatedSortingPopulation population = new NondominatedSortingPopulation();
         EpsilonBoxDominanceArchive archive = new EpsilonBoxDominanceArchive(0.01);
         TournamentSelection selection = new TournamentSelection(2);
@@ -67,11 +70,11 @@ public class TestCase {
         IOperatorSelector operatorSelector = new ProbabilityMatching(operators, 0.8, 0.8);
 
         //create credit assignment
-        ICreditAssignment creditAssignment = new ParentDomination(1, 0, 0);
+        ICreditAssignment creditAssignment = new ParetoFrontContribution(1, 0);
 
         //create AOS
         AOSStrategy aosStrategy = new AOSStrategy(creditAssignment, operatorSelector);
-        AOSMOEA aos = new AOSMOEA(nsgaii,variation, aosStrategy);
+        AOSMOEA aos = new AOSMOEA(nsgaii, variation, aosStrategy);
 
         //attach collectors
         Instrumenter instrumenter = new Instrumenter().withFrequency(5)
@@ -81,10 +84,10 @@ public class TestCase {
 
         //conduct search
         int maxEvaluations = 1000;
-        while (!instAlgorithm.isTerminated() && 
-                (instAlgorithm.getNumberOfEvaluations() < maxEvaluations)) {
+        while (!instAlgorithm.isTerminated()
+                && (instAlgorithm.getNumberOfEvaluations() < maxEvaluations)) {
             instAlgorithm.step();
-            
+
             try {
                 //one way to save current population
                 PopulationIO.writeObjectives(new File("results.txt"), aos.getPopulation());
@@ -92,6 +95,14 @@ public class TestCase {
                 Logger.getLogger(TestCase.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+
+        //save AOS results
+        IOSelectionHistory iosh = new IOSelectionHistory();
+        iosh.saveHistory(aos.getSelectionHistory(), "selection.csv", ",");
+        IOCreditHistory ioch = new IOCreditHistory();
+        ioch.saveHistory(aos.getCreditHistory(), "credit.csv", ",");
+        IOQualityHistory ioqh = new IOQualityHistory();
+        ioqh.saveHistory(aos.getQualityHistory(), "quality.csv", ",");
 
     }
 
