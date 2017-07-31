@@ -45,7 +45,7 @@ public class IOSelectionHistory implements Serializable{
      * @param separator the type of separator desired
      * @return true if the save is successful
      */
-    public  boolean saveHistory(OperatorSelectionHistory history,String filename,String separator) {
+    public static boolean saveHistory(OperatorSelectionHistory history,String filename,String separator) {
         try(FileWriter fw = new FileWriter(new File(filename))){
             ArrayList<Variation> orderedHistory = history.getOrderedHistory();
             ArrayList<Integer> orderedTime = history.getOrderedSelectionTime();
@@ -76,7 +76,7 @@ public class IOSelectionHistory implements Serializable{
      * @param separator the type of separator desired
      * @return true if the save is successful
      */
-    public boolean saveSelectionCount(OperatorSelectionHistory history,String filename,String separator) {
+    public static boolean saveSelectionCount(OperatorSelectionHistory history,String filename,String separator) {
         try(FileWriter fw = new FileWriter(new File(filename))){
             Collection<Variation> operators = history.getOperators();
             for(Variation operator:operators){
@@ -99,7 +99,7 @@ public class IOSelectionHistory implements Serializable{
      * @param history The credit repository to save
      * @param filename filename including the path and the extension.
      */
-    public void saveHistory(OperatorSelectionHistory history,String filename){
+    public static void saveHistory(OperatorSelectionHistory history,String filename){
         try(ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(filename));){
             os.writeObject(history);
             os.close();
@@ -113,7 +113,7 @@ public class IOSelectionHistory implements Serializable{
      * @param filename the file name (path and extension included)
      * @return the CreditRepository instance saved by using saveHistory()
      */
-    public OperatorSelectionHistory loadHistory(String filename){
+    public static OperatorSelectionHistory loadHistory(String filename){
         OperatorSelectionHistory history = null;
         try(ObjectInputStream is = new ObjectInputStream( new FileInputStream( filename ))){
            history = (OperatorSelectionHistory)is.readObject();
@@ -135,7 +135,7 @@ public class IOSelectionHistory implements Serializable{
      * @param separator the desired separator
      * @return True if save is successful, otherwise false
      */
-    public boolean saveSelectionFrequency(OperatorSelectionHistory history,String filename,String separator) {
+    public static boolean saveSelectionFrequency(OperatorSelectionHistory history,String filename,String separator) {
         try(FileWriter fw = new FileWriter(new File(filename))){
             Iterator<Variation> iter = history.getOperators().iterator();
             while(iter.hasNext()){
