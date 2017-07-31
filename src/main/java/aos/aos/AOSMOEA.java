@@ -174,6 +174,7 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
                 offspring, parents, population, paretofront, archive,
                 operatorSelector.getOperatorNames());
 
+        operatorSelectionHistory.add(nextOperator, ea.getNumberOfEvaluations());
         for (String name : credits.keySet()) {
             Credit reward = new Credit(ea.getNumberOfEvaluations(), credits.get(name));
             operatorSelector.update(reward, operatorSelector.getOperator(name));
