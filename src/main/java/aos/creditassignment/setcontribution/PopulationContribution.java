@@ -45,7 +45,7 @@ public class PopulationContribution extends AbstractSetContribution {
     public Map<String, Double> compute(Population solutionSet, Set<String> operators) {
         HashMap<String, Double> credits = new HashMap<>();
         for (Solution o : solutionSet) {
-            String name = ((SerializableVal) o.getAttribute("operator")).getSval();
+            String name = String.valueOf(o.getAttribute("operator"));
             if (!operators.contains(name)) {
                 continue;
             }

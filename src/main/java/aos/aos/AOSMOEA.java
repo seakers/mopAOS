@@ -164,8 +164,8 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
 
         //set attributes to all newly created offspring
         for (Solution soln : offspring) {
-            soln.setAttribute(nfeStr, new SerializableVal(ea.getNumberOfEvaluations()));
-            soln.setAttribute(creatorStr, new SerializableVal(nextOperator.toString()));
+            soln.setAttribute(nfeStr, ea.getNumberOfEvaluations());
+            soln.setAttribute(creatorStr, nextOperator.toString());
         }
 
         paretofront.addAll(offspring);

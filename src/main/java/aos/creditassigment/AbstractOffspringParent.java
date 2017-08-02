@@ -36,7 +36,7 @@ public abstract class AbstractOffspringParent implements ICreditAssignment {
         HashMap<String, Double> credits = new HashMap<>();
         for (Solution o : offspring) {
             for (Solution p : parent) {
-                String name = ((SerializableVal) o.getAttribute("operator")).getSval();
+                String name = String.valueOf(o.getAttribute("operator"));
                 if (!operators.contains(name)) {
                     continue;
                 }
