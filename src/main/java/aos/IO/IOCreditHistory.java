@@ -40,7 +40,7 @@ public class IOCreditHistory {
      * @param separator the type of separator desired
      * @return true if the save is successful
      */
-    public boolean saveHistory(CreditHistory creditHistory, String filename, String separator) {
+    public static boolean saveHistory(CreditHistory creditHistory, String filename, String separator) {
         Collection<Variation> operators = creditHistory.getOperators();
         try (FileWriter fw = new FileWriter(new File(filename))) {
             for(Variation oper:operators){
@@ -83,56 +83,6 @@ public class IOCreditHistory {
             Logger.getLogger(IOQualityHistory.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
-        
-//                int maxIter = creditHistory.getMaxIteration()+1;
-//        //Create matrix of data (rows are operators)(columns are credits)
-//        double[][] data = new double[creditHistory.getOperators().size()][maxIter];
-//        int operNum=0;
-//        Collection<Variation> operators = creditHistory.getOperators();
-//        for(Variation operator: creditHistory.getOperators()){
-//            Arrays.fill(data[operNum], -1.0);
-//            Iterator<Reward> iter = creditHistory.getHistory(operator).iterator();
-//            while(iter.hasNext()){
-//                Credit reward = iter.next();
-//                int iteration = reward.getIteration();
-//                if(data[operNum][iteration]==-1){
-//                    data[operNum][iteration]=reward.getValue();
-//                }else{
-//                    data[operNum][iteration]+=reward.getValue();
-//                }
-//            }
-//            operNum++;
-//        }
-//        
-//        try (FileWriter fw = new FileWriter(new File(filename))) {
-//            //write the header of the file
-//            fw.append("iteration" + separator);
-//            Iterator<Variation> iter = operators.iterator();
-//            for(int i=0;i<operators.size()-1;i++){
-//                Variation operator = iter.next();
-//                String[] operatorName = operator.toString().split("operator.");
-//                String[] splitName = operatorName[operatorName.length - 1].split("@");
-//                fw.append(splitName[0] + separator);
-//            }//print out last operator name without separator
-//            Variation operator = iter.next();
-//            String[] operatorName = operator.toString().split("operator.");
-//            String[] splitName = operatorName[operatorName.length - 1].split("@");
-//            fw.append(splitName[0] + separator);
-//            fw.append("\n");
-//            
-//            for (int i = 0; i < maxIter; i++) {//go over iterations
-//                fw.append(Integer.toString(i)+ separator);
-//                for (int j = 0; j < operators.size() - 1; j++) {//go over operators
-//                    fw.append(Double.toString(data[j][i]) + separator);
-//                }
-//                fw.append(Double.toString(data[operators.size() - 1][i]));
-//                fw.append("\n");
-//            }
-//            fw.flush();
-//        } catch (IOException ex) {
-//            Logger.getLogger(IOQualityHistory.class.getName()).log(Level.SEVERE, null, ex);
-//            return false;
-//        }
         return true;
     }
 
@@ -143,7 +93,7 @@ public class IOCreditHistory {
      * @param creditHistory The quality history to save
      * @param filename filename including the path and the extension.
      */
-    public void saveHistory(CreditHistory creditHistory, String filename) {
+    public static void saveHistory(CreditHistory creditHistory, String filename) {
         try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(filename));) {
             os.writeObject(creditHistory);
             os.close();
