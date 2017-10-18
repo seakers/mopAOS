@@ -12,7 +12,9 @@ import aos.history.OperatorQualityHistory;
 import aos.history.OperatorSelectionHistory;
 import aos.nextoperator.IOperatorSelector;
 import aos.operator.AOSVariation;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import org.moeaframework.algorithm.AbstractEvolutionaryAlgorithm;
 import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Problem;
@@ -82,17 +84,27 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
     private final NondominatedPopulation paretofront;
 
     /**
+     * Option to record all solutions that are ever created for post-run
+     * analysis
+     */
+    private final boolean recordAllSolutions;
+
+    private final HashSet<Solution> allSolutions;
+
+    /**
      * Var
      *
-     * 
+     *
      * @param ea the evolutionary algorithm
      * @param aosVariation the aos variation that must be given to the EA. It is
      * reassigned to the given operators during the search by the AOS
      * @param strategy the credit assignment and operator selection strategies
+     * @param recordAllSolutions Option to record all solutions that are ever
+     * created for post-run analysis
      */
     public AOSMOEA(AbstractEvolutionaryAlgorithm ea,
             AOSVariation aosVariation,
-            AOSStrategy strategy) {
+            AOSStrategy strategy, boolean recordAllSolutions) {
         super(ea.getProblem(), ea.getPopulation(), ea.getArchive(), null);
         this.creditAssignment = strategy.getCreditAssignment();
         this.operatorSelector = strategy.getOperatorSelection();
@@ -102,6 +114,8 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
         this.qualityHistory = new OperatorQualityHistory();
         this.adaptiveOperator = aosVariation;
         this.paretofront = new NondominatedPopulation();
+        this.recordAllSolutions = recordAllSolutions;
+        this.allSolutions = new HashSet<>();
     }
 
     @Override
@@ -111,6 +125,7 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
         }
         for (Solution soln : ea.getPopulation()) {
             soln.setAttribute(nfeStr, 0);
+            allSolutions.add(soln);
         }
     }
 
@@ -168,6 +183,14 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
             soln.setAttribute(creatorStr, nextOperator.toString());
         }
 
+        //record solutions if desired
+        if (recordAllSolutions) {
+            for (Solution soln : offspring) {
+                //use a copy in case there are other objects referencing the solutions
+                allSolutions.add(soln.copy());
+            }
+        }
+
         paretofront.addAll(offspring);
 
         Map<String, Double> credits = creditAssignment.compute(
@@ -179,15 +202,14 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
             Credit reward = new Credit(ea.getNumberOfEvaluations(), credits.get(name));
             operatorSelector.update(reward, operatorSelector.getOperator(name));
             creditHistory.add(operatorSelector.getOperator(name), reward);
-            operatorSelectionHistory.add(nextOperator, numberOfEvaluations);
         }
-        
+
         //update the quality history
         Map<Variation, Double> currentQualities = operatorSelector.getQualities();
         for (Variation operator : operatorSelector.getOperators()) {
-            qualityHistory.add(operator, currentQualities.get(operator));
+            qualityHistory.add(operator, currentQualities.get(operator), getNumberOfEvaluations());
         }
-        
+
     }
 
     @Override
@@ -224,7 +246,13 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
     public String getName() {
         return name;
     }
-
     
+    /**
+     * Returns the recorded solutions that were ever created and evaluated during the search.
+     * @return the unique solutions that were evaluated during the search
+     */
+    public Set<Solution> getAllSolutions(){
+        return allSolutions;
+    }
 
 }

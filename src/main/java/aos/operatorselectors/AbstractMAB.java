@@ -52,8 +52,8 @@ public abstract class AbstractMAB extends AbstractOperatorSelector{
      * @return 
      */
     @Override
-    protected double function2maximize(Variation operator){
-        return qualities.get(operator)+c*Math.sqrt((2*Math.log(tempHistory.getTotalSelectionCount()))/tempHistory.getSelectedTimes(operator));
+    protected double maximizationFunction(Variation operator){
+        return qualities.get(operator)+c*Math.sqrt((2*Math.log(tempHistory.getTotalSelectionCount()))/tempHistory.getSelectionCount(operator));
     }
     
     /**

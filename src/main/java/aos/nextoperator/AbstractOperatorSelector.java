@@ -81,14 +81,14 @@ public abstract class AbstractOperatorSelector implements IOperatorSelector {
                 Variation operator_i = iter.next();
                 if (leadOperator == null) {
                     leadOperator = operator_i;
-                    maxVal = function2maximize(operator_i);
+                    maxVal = maximizationFunction(operator_i);
                     continue;
                 }
-                if (function2maximize(operator_i) > maxVal) {
-                    maxVal = function2maximize(operator_i);
+                if (maximizationFunction(operator_i) > maxVal) {
+                    maxVal = maximizationFunction(operator_i);
                     leadOperator = operator_i;
                     ties.clear();
-                } else if (function2maximize(operator_i) == maxVal) {
+                } else if (maximizationFunction(operator_i) == maxVal) {
                     ties.add(operator_i);
                 }
             }
@@ -106,14 +106,14 @@ public abstract class AbstractOperatorSelector implements IOperatorSelector {
     /**
      * The function to be maximized by argMax(). The function to be maximized
      * may be related to credits or a function of credits. If an
-     * IHeuristicSeletor uses this method, it should be overridden
+     * IOperatorSeletor uses this method, it should be overridden
      *
      * @param operator input to the function
      * @return the value of the function with the given input
      * @throws java.lang.NoSuchMethodException If this method is used without
      * being overridden, then it throws a NoSuchMethodException
      */
-    protected double function2maximize(Variation operator) throws NoSuchMethodException {
+    protected double maximizationFunction(Variation operator) throws NoSuchMethodException {
         throw new NoSuchMethodException("Need to override this method");
     }
 
@@ -129,7 +129,7 @@ public abstract class AbstractOperatorSelector implements IOperatorSelector {
     }
 
     /**
-     * Increments the number of times nextHeuristic() has been called by one
+     * Increments the number of times nextOperator() has been called by one
      */
     protected void incrementIterations() {
         iterations++;

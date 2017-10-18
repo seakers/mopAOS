@@ -5,9 +5,7 @@
  */
 package aos.example;
 
-import aos.IO.IOCreditHistory;
-import aos.IO.IOQualityHistory;
-import aos.IO.IOSelectionHistory;
+import aos.IO.AOSHistoryIO;
 import aos.aos.AOSMOEA;
 import aos.aos.AOSStrategy;
 import aos.creditassigment.ICreditAssignment;
@@ -22,6 +20,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.moeaframework.Instrumenter;
+import org.moeaframework.algorithm.EpsilonMOEA;
 import org.moeaframework.algorithm.NSGAII;
 import org.moeaframework.analysis.collector.InstrumentedAlgorithm;
 import org.moeaframework.core.EpsilonBoxDominanceArchive;
@@ -55,7 +54,7 @@ public class TestCase {
         EpsilonBoxDominanceArchive archive = new EpsilonBoxDominanceArchive(0.01);
         TournamentSelection selection = new TournamentSelection(2);
         RandomInitialization initialization = new RandomInitialization(uf1, populationSize);
-        NSGAII nsgaii = new NSGAII(uf1, population, archive, selection, variation, initialization);
+        EpsilonMOEA emoea = new EpsilonMOEA(uf1, population, archive, selection, variation, initialization);
 
         //example of operators you might use
         ArrayList<Variation> operators = new ArrayList();
@@ -70,11 +69,11 @@ public class TestCase {
         IOperatorSelector operatorSelector = new ProbabilityMatching(operators, 0.8, 0.8);
 
         //create credit assignment
-        ICreditAssignment creditAssignment = new ParetoFrontContribution(1, 0);
+        ICreditAssignment creditAssignment = new ParentDomination(1, 0, 0);
 
         //create AOS
         AOSStrategy aosStrategy = new AOSStrategy(creditAssignment, operatorSelector);
-        AOSMOEA aos = new AOSMOEA(nsgaii, variation, aosStrategy);
+        AOSMOEA aos = new AOSMOEA(emoea, variation, aosStrategy, true);
 
         //attach collectors
         Instrumenter instrumenter = new Instrumenter().withFrequency(5)
@@ -97,12 +96,9 @@ public class TestCase {
         }
 
         //save AOS results
-        IOSelectionHistory iosh = new IOSelectionHistory();
-        iosh.saveHistory(aos.getSelectionHistory(), "selection.csv", ",");
-        IOCreditHistory ioch = new IOCreditHistory();
-        ioch.saveHistory(aos.getCreditHistory(), "credit.csv", ",");
-        IOQualityHistory ioqh = new IOQualityHistory();
-        ioqh.saveHistory(aos.getQualityHistory(), "quality.csv", ",");
+        AOSHistoryIO.saveSelectionHistory(aos.getSelectionHistory(), new File("selection.csv"), ",");
+        AOSHistoryIO.saveCreditHistory(aos.getCreditHistory(), new File("credit.csv"), ",");
+        AOSHistoryIO.saveQualityHistory(aos.getQualityHistory(), new File("quality.csv"), ",");
 
     }
 

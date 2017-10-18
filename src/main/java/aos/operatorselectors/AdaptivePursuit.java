@@ -111,7 +111,7 @@ public class AdaptivePursuit extends ProbabilityMatching {
      * @return the current quality of the specified operator
      */
     @Override
-    protected double function2maximize(Variation operator) {
+    protected double maximizationFunction(Variation operator) {
         return qualities.get(operator);
     }
 

@@ -50,11 +50,9 @@ public class OperatorSelectionHistory implements Serializable {
     }
 
     /**
-     * Returns the history of the time the operator was selected
+     * Returns the history of the time (NFE) when an operator was selected
      *
-     * @return a stack of Variations which contains the history of the selected
-     * operators in the ordered they occurred. Selections at the beginning of
-     * the search are at the top of the Stack.
+     * @return an ArrayList containing the NFE at which an operator was selected
      */
     public ArrayList<Integer> getOrderedSelectionTime() {
         ArrayList<Integer> out = new ArrayList<>();
@@ -72,10 +70,10 @@ public class OperatorSelectionHistory implements Serializable {
      * operators included in this history.
      *
      * @param operator to add to the history
-     * @param timeSelected
+     * @param iteration the iteration when the operator was selected
      */
-    public void add(Variation operator, int timeSelected) {
-        history.add(new Selection(operator, timeSelected));
+    public void add(Variation operator, int iteration) {
+        history.add(new Selection(operator, iteration));
         if (operatorSelectionCount.containsKey(operator)) {
             operatorSelectionCount.put(operator, operatorSelectionCount.get(operator) + 1);
         } else {
@@ -91,7 +89,7 @@ public class OperatorSelectionHistory implements Serializable {
      * @param operator
      * @return
      */
-    public int getSelectedTimes(Variation operator) {
+    public int getSelectionCount(Variation operator) {
         return operatorSelectionCount.get(operator);
     }
 

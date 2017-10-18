@@ -106,7 +106,7 @@ public class RouletteWheel extends AbstractOperatorSelector {
 
     @Override
     public String toString() {
-        return "ProbabilityMatching";
+        return "RouletteWheel";
     }
 
     /**

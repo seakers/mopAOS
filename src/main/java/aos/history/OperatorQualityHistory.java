@@ -6,9 +6,9 @@
 package aos.history;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Stack;
 import org.moeaframework.core.Variation;
 
 /**
@@ -21,7 +21,7 @@ public class OperatorQualityHistory implements Serializable {
 
     private static final long serialVersionUID = -2323214225020219554L;
 
-    protected HashMap<Variation, Stack<Double>> history;
+    protected HashMap<Variation, ArrayList<QualityRecord>> history;
 
     public OperatorQualityHistory() {
         history = new HashMap();
@@ -44,12 +44,13 @@ public class OperatorQualityHistory implements Serializable {
      *
      * @param operator the operator to add to the history
      * @param quality the quality value to add
+     * @param iteration the iteration when the operator was selected
      */
-    public void add(Variation operator, double quality) {
+    public void add(Variation operator, double quality, int iteration) {
         if (!history.containsKey(operator)) {
-            history.put(operator, new Stack<Double>());
+            history.put(operator, new ArrayList<>());
         }
-        history.get(operator).push(quality);
+        history.get(operator).add(new QualityRecord(quality, iteration));
     }
 
     /**
@@ -58,7 +59,7 @@ public class OperatorQualityHistory implements Serializable {
      * @param operator of interest
      * @return the quality history of the specified operator
      */
-    public Collection<Double> getHistory(Variation operator) {
+    public Collection<QualityRecord> getHistory(Variation operator) {
         return history.get(operator);
     }
 
@@ -70,7 +71,7 @@ public class OperatorQualityHistory implements Serializable {
     public HashMap<Variation, Double> getLatest() {
         HashMap<Variation, Double> out = new HashMap<>();
         for (Variation operator : getOperators()) {
-            out.put(operator, this.getHistory(operator).iterator().next());
+            out.put(operator, this.getHistory(operator).iterator().next().getQuality());
         }
         return out;
     }
@@ -83,5 +84,7 @@ public class OperatorQualityHistory implements Serializable {
             history.get(operator).clear();
         }
     }
+
+  
 
 }
