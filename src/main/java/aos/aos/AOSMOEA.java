@@ -187,7 +187,7 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
         if (recordAllSolutions) {
             for (Solution soln : offspring) {
                 //use a copy in case there are other objects referencing the solutions
-                allSolutions.add(soln.copy());
+                allSolutions.add(soln.deepCopy());
             }
         }
 

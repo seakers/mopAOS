@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.moeaframework.core.Variation;
+import org.moeaframework.core.operator.CompoundVariation;
 
 /**
  * This class is responsible for saving the history of credits received by
@@ -74,9 +75,15 @@ public class AOSHistoryIO {
                 }
                 fw.append(Integer.toString(iters[index]) + "\n");
 
-                String[] operatorName = oper.toString().split("operator.");
-                String[] splitName = operatorName[operatorName.length - 1].split("@");
-                fw.append(splitName[0] + separator);
+                String operatorName;
+                if(oper instanceof CompoundVariation){
+                    operatorName = ((CompoundVariation)oper).getName();
+                }else{
+                    String[] str = oper.toString().split("operator.");
+                    String[] splitName = str[str.length - 1].split("@");
+                    operatorName =splitName[0];
+                }
+                fw.append(operatorName + separator);
                 for (int i = 0; i < index; i++) {
                     fw.append(Double.toString(vals[i]) + separator);
                 }
@@ -154,9 +161,15 @@ public class AOSHistoryIO {
                 }
                 fw.append("\n");
                 historyIter = qualityHistory.getHistory(operator).iterator();
-                String[] operatorName = operator.toString().split("operator.");
-                String[] splitName = operatorName[operatorName.length - 1].split("@");
-                fw.append(splitName[0] + separator);
+                String operatorName;
+                if(operator instanceof CompoundVariation){
+                    operatorName = ((CompoundVariation)operator).getName();
+                }else{
+                    String[] str = operator.toString().split("operator.");
+                    String[] splitName = str[str.length - 1].split("@");
+                    operatorName =splitName[0];
+                }
+                fw.append(operatorName + separator);
                 while (historyIter.hasNext()) {
                     fw.append(Double.toString(historyIter.next().getQuality()));
                     if (historyIter.hasNext()) {
@@ -228,9 +241,16 @@ public class AOSHistoryIO {
             for (int i = 0; i < orderedHistory.size(); i++) {
                 fw.append(Integer.toString(orderedTime.get(i)));
                 fw.append(separator);
-                String[] operatorName = orderedHistory.get(i).toString().split("operator.");
-                String[] splitName = operatorName[operatorName.length - 1].split("@");
-                fw.append(splitName[0]);
+                Variation operator = orderedHistory.get(i);
+                String operatorName;
+                if(operator instanceof CompoundVariation){
+                    operatorName = ((CompoundVariation)operator).getName();
+                }else{
+                    String[] str = operator.toString().split("operator.");
+                    String[] splitName = str[str.length - 1].split("@");
+                    operatorName =splitName[0];
+                }
+                fw.append(operatorName);
                 if (!orderedHistory.isEmpty()) {
                     fw.append("\n");
                 }
@@ -257,9 +277,15 @@ public class AOSHistoryIO {
         try (FileWriter fw = new FileWriter(file)) {
             Collection<Variation> operators = history.getOperators();
             for (Variation operator : operators) {
-                String[] operatorName = operator.toString().split("operator.");
-                String[] splitName = operatorName[operatorName.length - 1].split("@");
-                fw.append(splitName[0] + separator);
+                String operatorName;
+                if(operator instanceof CompoundVariation){
+                    operatorName = ((CompoundVariation)operator).getName();
+                }else{
+                    String[] str = operator.toString().split("operator.");
+                    String[] splitName = str[str.length - 1].split("@");
+                    operatorName =splitName[0];
+                }
+                fw.append(operatorName + separator);
                 fw.append(Integer.toString(history.getSelectionCount(operator)) + "\n");
             }
             fw.flush();
@@ -322,7 +348,15 @@ public class AOSHistoryIO {
             Iterator<Variation> iter = history.getOperators().iterator();
             while (iter.hasNext()) {
                 Variation operator = iter.next();
-                fw.append(operator.toString() + separator + history.getSelectionCount(operator));
+                String operatorName;
+                if(operator instanceof CompoundVariation){
+                    operatorName = ((CompoundVariation)operator).getName();
+                }else{
+                    String[] str = operator.toString().split("operator.");
+                    String[] splitName = str[str.length - 1].split("@");
+                    operatorName =splitName[0];
+                }
+                fw.append(operatorName + separator + history.getSelectionCount(operator));
                 if (iter.hasNext()) {
                     fw.append(separator);
                 }
