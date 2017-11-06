@@ -5,7 +5,6 @@
  */
 package aos.creditassignment.setcontribution;
 
-import aos.aos.SerializableVal;
 import aos.creditassigment.ICreditAssignment;
 import aos.creditassignment.fitnessindicator.IIndicator;
 import java.util.HashMap;
@@ -51,7 +50,7 @@ public class IndicatorContribution implements ICreditAssignment {
         for (Solution soln : population) {
             double contribution = (double) soln.getAttribute("contribution");
             if (soln.hasAttribute("operator")) {
-                String operator = ((SerializableVal) soln.getAttribute("operator")).getSval();
+                String operator = String.valueOf(soln.getAttribute("operator"));
                 credits.put(operator, credits.get(operator) + contribution);
             }
         }

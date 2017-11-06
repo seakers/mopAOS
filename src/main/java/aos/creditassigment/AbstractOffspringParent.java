@@ -5,7 +5,6 @@
  */
 package aos.creditassigment;
 
-import aos.aos.SerializableVal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

@@ -5,10 +5,8 @@
  */
 package aos.operator;
 
-import aos.aos.SerializableVal;
 import org.moeaframework.core.Solution;
 import org.moeaframework.core.Variation;
-import org.moeaframework.core.operator.CompoundVariation;
 
 /**
  * This variation is a wrapper for other variations and can take on their

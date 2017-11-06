@@ -5,7 +5,6 @@
  */
 package aos.creditassigment;
 
-import aos.aos.SerializableVal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -63,7 +62,7 @@ public abstract class AbstractSetImprovement implements ICreditAssignment {
         HashMap<String, Double> credits = new HashMap<>();
         this.nOffspring = offspring.length;
         for (Solution o : offspring) {
-            String name = ((SerializableVal) o.getAttribute("operator")).getSval();
+            String name = String.valueOf(o.getAttribute("operator"));
             if (!operators.contains(name)) {
                 continue;
             }
