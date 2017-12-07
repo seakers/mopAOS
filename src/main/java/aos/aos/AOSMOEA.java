@@ -12,6 +12,7 @@ import aos.history.OperatorQualityHistory;
 import aos.history.OperatorSelectionHistory;
 import aos.nextoperator.IOperatorSelector;
 import aos.operator.AOSVariation;
+import aos.operator.CheckParentException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -171,9 +172,21 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
 
     @Override
     protected void iterate() {
-        Variation nextOperator = operatorSelector.nextOperator();
-        this.adaptiveOperator.setVariation(nextOperator);
-        ea.step();
+
+        //Some operators might need to check some parent property in order to operate on them
+        //These operators must extend AbstractCheckParent and throw a CheckParentException if the parents don't fulfill the given criteria
+        //If the parents fail to fulfill the criteria, the operator is given 0 credit and a new operator is selected
+        Variation nextOperator = null;
+        while (nextOperator == null) {
+            try {
+                nextOperator = operatorSelector.nextOperator();
+                this.adaptiveOperator.setVariation(nextOperator);
+                ea.step();
+            } catch (CheckParentException e) { 
+                nextOperator = null;
+            }
+        }
+
         Solution[] offspring = this.adaptiveOperator.getOffspring();
         Solution[] parents = this.adaptiveOperator.getParents();
 
@@ -246,12 +259,14 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
     public String getName() {
         return name;
     }
-    
+
     /**
-     * Returns the recorded solutions that were ever created and evaluated during the search.
+     * Returns the recorded solutions that were ever created and evaluated
+     * during the search.
+     *
      * @return the unique solutions that were evaluated during the search
      */
-    public Set<Solution> getAllSolutions(){
+    public Set<Solution> getAllSolutions() {
         return allSolutions;
     }
 
