@@ -5,22 +5,17 @@
  */
 package aos.aos;
 
-import aos.creditassigment.Credit;
 import aos.creditassigment.ICreditAssignment;
 import aos.history.CreditHistory;
 import aos.history.OperatorQualityHistory;
 import aos.history.OperatorSelectionHistory;
 import aos.nextoperator.IOperatorSelector;
-import aos.operator.AOSVariation;
-import aos.operator.CheckParentException;
+import aos.operator.AbstractAOSVariation;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import org.moeaframework.algorithm.AbstractEvolutionaryAlgorithm;
-import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Problem;
 import org.moeaframework.core.Solution;
-import org.moeaframework.core.Variation;
 
 /**
  * An MOEA with an adaptive operator selector controlling the use of the
@@ -30,39 +25,15 @@ import org.moeaframework.core.Variation;
  */
 public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
 
-    private final String nfeStr = "NFE";
-
-    private final String creatorStr = "operator";
+    /**
+     * The solution attribute to keep track of when the solution was created
+     */
+    private final String NFE_ATTR = "NFE";
 
     /**
-     * The type of operator selection method
+     * The AOS strategy
      */
-    private final IOperatorSelector operatorSelector;
-
-    /**
-     * The Credit assignment strategy to be used that defines how much credit to
-     * receive for certain types of solutions
-     */
-    private final ICreditAssignment creditAssignment;
-
-    /**
-     * The history that stores all the operators selected by the hyper
-     * operators. History can be extracted by getSelectionHistory(). Used for
-     * analyzing the results to see the dynamics of operators selected
-     */
-    private final OperatorSelectionHistory operatorSelectionHistory;
-
-    /**
-     * The history that stores all the rewards received by the operators. Used
-     * for analyzing the results to see the dynamics in rewards
-     */
-    private final CreditHistory creditHistory;
-
-    /**
-     * The history of the operators' qualities over time. Used for analyzing the
-     * results to see the dynamics of the operator qualities
-     */
-    private final OperatorQualityHistory qualityHistory;
+    private final AbstractAOSVariation aosStrategy;
 
     /**
      * Name to id the AOS
@@ -70,19 +41,9 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
     private String name;
 
     /**
-     * The operator that takes on the other operators' methods
-     */
-    private final AOSVariation adaptiveOperator;
-
-    /**
      * The underlying evolutionary algorithm
      */
     private final AbstractEvolutionaryAlgorithm ea;
-
-    /**
-     * The current paretofront
-     */
-    private final NondominatedPopulation paretofront;
 
     /**
      * Option to record all solutions that are ever created for post-run
@@ -95,26 +56,16 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
     /**
      * Var
      *
-     *
      * @param ea the evolutionary algorithm
-     * @param aosVariation the aos variation that must be given to the EA. It is
-     * reassigned to the given operators during the search by the AOS
-     * @param strategy the credit assignment and operator selection strategies
+     * @param aosStrategy The AOS strategy
      * @param recordAllSolutions Option to record all solutions that are ever
      * created for post-run analysis
      */
     public AOSMOEA(AbstractEvolutionaryAlgorithm ea,
-            AOSVariation aosVariation,
-            AOSStrategy strategy, boolean recordAllSolutions) {
+            AbstractAOSVariation aosStrategy, boolean recordAllSolutions) {
         super(ea.getProblem(), ea.getPopulation(), ea.getArchive(), null);
-        this.creditAssignment = strategy.getCreditAssignment();
-        this.operatorSelector = strategy.getOperatorSelection();
         this.ea = ea;
-        this.creditHistory = new CreditHistory();
-        this.operatorSelectionHistory = new OperatorSelectionHistory();
-        this.qualityHistory = new OperatorQualityHistory();
-        this.adaptiveOperator = aosVariation;
-        this.paretofront = new NondominatedPopulation();
+        this.aosStrategy = aosStrategy;
         this.recordAllSolutions = recordAllSolutions;
         this.allSolutions = new HashSet<>();
     }
@@ -125,7 +76,7 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
             ea.step();
         }
         for (Solution soln : ea.getPopulation()) {
-            soln.setAttribute(nfeStr, 0);
+            soln.setAttribute(NFE_ATTR, 0);
             allSolutions.add(soln);
         }
     }
@@ -172,82 +123,40 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
 
     @Override
     protected void iterate() {
-
-        //Some operators might need to check some parent property in order to operate on them
-        //These operators must extend AbstractCheckParent and throw a CheckParentException if the parents don't fulfill the given criteria
-        //If the parents fail to fulfill the criteria, the operator is given 0 credit and a new operator is selected
-        Variation nextOperator = null;
-        while (nextOperator == null) {
-            try {
-                nextOperator = operatorSelector.nextOperator();
-                this.adaptiveOperator.setVariation(nextOperator);
-                ea.step();
-            } catch (CheckParentException e) { 
-                nextOperator = null;
-            }
-        }
-
-        Solution[] offspring = this.adaptiveOperator.getOffspring();
-        Solution[] parents = this.adaptiveOperator.getParents();
-
-        //set attributes to all newly created offspring
-        for (Solution soln : offspring) {
-            soln.setAttribute(nfeStr, ea.getNumberOfEvaluations());
-            soln.setAttribute(creatorStr, nextOperator.toString());
-        }
-
+        ea.step();
+        
         //record solutions if desired
         if (recordAllSolutions) {
-            for (Solution soln : offspring) {
+            for (Solution soln : ea.getPopulation()) {
                 //use a copy in case there are other objects referencing the solutions
                 allSolutions.add(soln.deepCopy());
             }
         }
-
-        paretofront.addAll(offspring);
-
-        Map<String, Double> credits = creditAssignment.compute(
-                offspring, parents, population, paretofront, archive,
-                operatorSelector.getOperatorNames());
-
-        operatorSelectionHistory.add(nextOperator, ea.getNumberOfEvaluations());
-        for (String name : credits.keySet()) {
-            Credit reward = new Credit(ea.getNumberOfEvaluations(), credits.get(name));
-            operatorSelector.update(reward, operatorSelector.getOperator(name));
-            creditHistory.add(operatorSelector.getOperator(name), reward);
-        }
-
-        //update the quality history
-        Map<Variation, Double> currentQualities = operatorSelector.getQualities();
-        for (Variation operator : operatorSelector.getOperators()) {
-            qualityHistory.add(operator, currentQualities.get(operator), getNumberOfEvaluations());
-        }
-
     }
 
     @Override
     public OperatorSelectionHistory getSelectionHistory() {
-        return operatorSelectionHistory;
+        return aosStrategy.getSelectionHistory();
     }
 
     @Override
     public OperatorQualityHistory getQualityHistory() {
-        return qualityHistory;
+        return aosStrategy.getQualityHistory();
     }
 
     @Override
     public CreditHistory getCreditHistory() {
-        return creditHistory;
+        return aosStrategy.getCreditHistory();
     }
 
     @Override
     public ICreditAssignment getCreditAssignment() {
-        return creditAssignment;
+        return aosStrategy.getCreditAssignment();
     }
 
     @Override
     public IOperatorSelector getOperatorSelector() {
-        return operatorSelector;
+        return aosStrategy.getOperatorSelector();
     }
 
     @Override

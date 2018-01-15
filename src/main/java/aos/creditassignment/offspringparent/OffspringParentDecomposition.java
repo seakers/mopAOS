@@ -14,7 +14,7 @@ import org.moeaframework.core.Solution;
  *
  * @author nozomihitomi
  */
-public class ParentDecomposition extends AbstractOffspringParent {
+public class OffspringParentDecomposition extends AbstractOffspringParent {
 
     /**
      * Weight vector of the current problem
@@ -26,7 +26,7 @@ public class ParentDecomposition extends AbstractOffspringParent {
      */
     private double[] idealPoint;
 
-    public ParentDecomposition() {
+    public OffspringParentDecomposition() {
     }
 
     /**
@@ -71,7 +71,7 @@ public class ParentDecomposition extends AbstractOffspringParent {
     }
 
     @Override
-    public double compute(Solution offspring, Solution parent) {
+    public double computeCredit(Solution offspring, Solution parent) {
         double parentFitness = fitness(parent, weights);
         return (parentFitness - fitness(offspring, weights)) / parentFitness;
     }

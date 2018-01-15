@@ -5,49 +5,31 @@
  */
 package aos.operator;
 
-import org.moeaframework.core.Solution;
+import java.util.Collection;
 import org.moeaframework.core.Variation;
 
 /**
- * This variation is a wrapper for other variations and can take on their
- * methods. The wrapped variation can be changed using the set method
+ * Interface for the AOS strategies contained in a Variation
  *
  * @author nozomihitomi
  */
-public class AOSVariation implements Variation {
+public interface AOSVariation extends Variation {
 
-    private Variation var;
+    /**
+     * Resets the operator selection strategy
+     */
+    public void reset();
 
-    private Solution[] parents;
-
-    private Solution[] offspring;
-
-    @Override
-    public int getArity() {
-        return var.getArity();
-    }
-
-    @Override
-    public Solution[] evolve(Solution[] parents) {
-        this.parents = parents;
-        this.offspring = var.evolve(parents);
-        return this.offspring;
-    }
-
-    public Solution[] getParents() {
-        return parents;
-    }
-
-    public Solution[] getOffspring() {
-        return offspring;
-    }
-
-    public void setVariation(Variation variation) {
-        this.var = variation;
-    }
-
-    public Variation getVariation(Variation variation) {
-        return var;
-
-    }
+    /**
+     * Resets the operator selection strategy and replaces the current operators
+     * with the given operators.
+     *
+     * @param operators the new operators.
+     */
+    public void reset(Collection<Variation> operators);
+    
+    /**
+     * Computes the credits and updates the selection probabilities
+     */
+    public void update();
 }

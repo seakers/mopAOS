@@ -5,12 +5,11 @@
  */
 package aos.creditassignment.setcontribution;
 
-import aos.creditassigment.ICreditAssignment;
+import aos.creditassigment.AbstractSetContribution;
 import aos.creditassignment.fitnessindicator.IIndicator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Population;
 import org.moeaframework.core.Solution;
 
@@ -22,22 +21,21 @@ import org.moeaframework.core.Solution;
  *
  * @author SEAK2
  */
-public class IndicatorContribution implements ICreditAssignment {
+public class SetContributionIndicator extends AbstractSetContribution {
     private final IIndicator indicator;
     /**
      *
-     * @param indicator
+     * @param solutionSet The solution set to compute contributions
+     * @param indicator the indicator to compute the indicator metric
      */
-    public IndicatorContribution(IIndicator indicator) {
+    public SetContributionIndicator(Population solutionSet, IIndicator indicator) {
+        super(solutionSet, 0);
         this.indicator = indicator;
     }
 
-
     @Override
-    public Map<String, Double> compute(Solution[] offspring, Solution[] parent,
-            Population population, NondominatedPopulation paretoFront, 
-            NondominatedPopulation archive, Set<String> operators) {
-        indicator.computeContributions(population);
+    public Map<String, Double> computeCredit(Set<String> operators){
+        indicator.computeContributions(solutionSet);
 
         HashMap<String, Double> credits = new HashMap<>();
         for (String name : operators) {
@@ -47,7 +45,7 @@ public class IndicatorContribution implements ICreditAssignment {
         double minCredit = Double.POSITIVE_INFINITY;
         double maxCredit = Double.NEGATIVE_INFINITY;
         
-        for (Solution soln : population) {
+        for (Solution soln : solutionSet) {
             double contribution = (double) soln.getAttribute("contribution");
             if (soln.hasAttribute("operator")) {
                 String operator = String.valueOf(soln.getAttribute("operator"));

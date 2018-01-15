@@ -8,7 +8,6 @@ package aos.nextoperator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
@@ -208,6 +207,17 @@ public abstract class AbstractOperatorSelector implements IOperatorSelector {
         operatorNameMap.remove(operator.toString());
         return operators.remove(operator);
     }
+    
+    /**
+     * Removes all operator from the current set of operators
+     */
+    @Override
+    public void removeOperators(){
+        for(Variation var : getOperators()){
+            removeOperator(var);
+        }
+    }
+
 
     /**
      * Adds an operator to the current set of operators

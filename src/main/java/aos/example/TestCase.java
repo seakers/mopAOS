@@ -7,12 +7,9 @@ package aos.example;
 
 import aos.IO.AOSHistoryIO;
 import aos.aos.AOSMOEA;
-import aos.aos.AOSStrategy;
-import aos.creditassigment.ICreditAssignment;
-import aos.creditassignment.offspringparent.ParentDomination;
-import aos.creditassignment.setcontribution.ParetoFrontContribution;
+import aos.creditassignment.offspringparent.OffspringParentDomination;
 import aos.nextoperator.IOperatorSelector;
-import aos.operator.AOSVariation;
+import aos.operator.AOSVariationOP;
 import aos.operatorselectors.ProbabilityMatching;
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +18,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.moeaframework.Instrumenter;
 import org.moeaframework.algorithm.EpsilonMOEA;
-import org.moeaframework.algorithm.NSGAII;
 import org.moeaframework.analysis.collector.InstrumentedAlgorithm;
 import org.moeaframework.core.EpsilonBoxDominanceArchive;
 import org.moeaframework.core.NondominatedSortingPopulation;
@@ -49,12 +45,10 @@ public class TestCase {
 
         //create the desired algorithm
         int populationSize = 100;
-        AOSVariation variation = new AOSVariation();
         NondominatedSortingPopulation population = new NondominatedSortingPopulation();
         EpsilonBoxDominanceArchive archive = new EpsilonBoxDominanceArchive(0.01);
         TournamentSelection selection = new TournamentSelection(2);
         RandomInitialization initialization = new RandomInitialization(uf1, populationSize);
-        EpsilonMOEA emoea = new EpsilonMOEA(uf1, population, archive, selection, variation, initialization);
 
         //example of operators you might use
         ArrayList<Variation> operators = new ArrayList();
@@ -67,13 +61,14 @@ public class TestCase {
 
         //create operator selector
         IOperatorSelector operatorSelector = new ProbabilityMatching(operators, 0.8, 0.8);
-
         //create credit assignment
-        ICreditAssignment creditAssignment = new ParentDomination(1, 0, 0);
+        OffspringParentDomination creditAssignment = new OffspringParentDomination(1, 0, 0);
+        
+        //create AOS strategy
+        AOSVariationOP aosStrategy = new AOSVariationOP(operatorSelector,creditAssignment,populationSize);
 
-        //create AOS
-        AOSStrategy aosStrategy = new AOSStrategy(creditAssignment, operatorSelector);
-        AOSMOEA aos = new AOSMOEA(emoea, variation, aosStrategy, true);
+        EpsilonMOEA emoea = new EpsilonMOEA(uf1, population, archive, selection, null, initialization);
+        AOSMOEA aos = new AOSMOEA(emoea, aosStrategy, true);
 
         //attach collectors
         Instrumenter instrumenter = new Instrumenter().withFrequency(5)

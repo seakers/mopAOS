@@ -7,7 +7,6 @@ package aos.creditassignment.setimprovement;
 
 import aos.creditassigment.AbstractSetImprovement;
 import aos.creditassignment.fitnessindicator.IIndicator;
-import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Population;
 import org.moeaframework.core.Solution;
 
@@ -17,25 +16,26 @@ import org.moeaframework.core.Solution;
  *
  * @author Nozomi
  */
-public class IndicatorImprovement extends AbstractSetImprovement{
+public class SetImprovementIndicator extends AbstractSetImprovement{
     
+    /**
+     * the indicator to use to compute credits
+     */
     private final IIndicator indicator;
     
     /**
      * Constructor for indicator based set improvement credit assignment
-     * @param indicator
+     * @param solutionSet The solution set to compute improvements
+     * @param indicator the indicator to use to compute credits
      */
-    public IndicatorImprovement(IIndicator indicator) {
+    public SetImprovementIndicator(Population solutionSet, IIndicator indicator) {
+        super(solutionSet);
         this.indicator = indicator;
     }
 
     @Override
-    public double compute(Solution offspring, Population solutionSet) {
+    public double computeCredit(Solution offspring) {
         return indicator.computeContribution(solutionSet, offspring);
     }
 
-    @Override
-    public Population getSet(Population population, NondominatedPopulation paretoFront, NondominatedPopulation archive) {
-        return population;
-    }
 }

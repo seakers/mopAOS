@@ -86,6 +86,11 @@ public interface IOperatorSelector {
      * in the current set
      */
     public boolean removeOperator(Variation operator);
+    
+    /**
+     * Removes all operators from the current set of operators
+     */
+    public void removeOperators();
 
     /**
      * Adds an operator to the current set of operators

@@ -22,7 +22,7 @@ import org.moeaframework.core.Solution;
  *
  * @author nozomihitomi
  */
-public class OPBinaryIndicator extends AbstractOffspringParent {
+public class OffspringParentIndicator extends AbstractOffspringParent {
 
     /**
      * The binary indicator to use
@@ -34,13 +34,13 @@ public class OPBinaryIndicator extends AbstractOffspringParent {
      * @param indicator The indicator to use
      * @param prob
      */
-    public OPBinaryIndicator(IIndicator indicator, Problem prob) {
+    public OffspringParentIndicator(IIndicator indicator, Problem prob) {
         super();
         this.indicator = indicator;
     }
     
     @Override
-    public double compute(Solution offspring, Solution parent) {
+    public double computeCredit(Solution offspring, Solution parent) {
         return Math.max(0.0, indicator.compute(parent, offspring));
     }
 

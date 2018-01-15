@@ -14,7 +14,7 @@ import org.moeaframework.core.comparator.ParetoDominanceComparator;
  *
  * @author Nozomi
  */
-public class ParentDomination extends AbstractOffspringParent {
+public class OffspringParentDomination extends AbstractOffspringParent {
 
     /**
      * Credit that is assigned if the offspring dominates parent
@@ -45,7 +45,7 @@ public class ParentDomination extends AbstractOffspringParent {
      * @param rewardNoOneDominates Reward that is assigned if neither the
      * offspring or parent dominates the other
      */
-    public ParentDomination(double rewardOffspringDominates, double rewardNoOneDominates, double rewardParentDominates) {
+    public OffspringParentDomination(double rewardOffspringDominates, double rewardNoOneDominates, double rewardParentDominates) {
         super();
         this.creditOffspringDominates = rewardOffspringDominates;
         this.creditParentDominates = rewardParentDominates;
@@ -54,7 +54,7 @@ public class ParentDomination extends AbstractOffspringParent {
     }
 
     @Override
-    public double compute(Solution offspring, Solution parent) {
+    public double computeCredit(Solution offspring, Solution parent) {
         switch (comp.compare(offspring, parent)) {
             case -1:
                 return creditOffspringDominates;
