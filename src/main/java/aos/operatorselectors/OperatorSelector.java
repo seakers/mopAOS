@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package aos.nextoperator;
+package aos.operatorselectors;
 
 import aos.creditassigment.Credit;
 import java.util.Collection;
@@ -17,7 +17,7 @@ import org.moeaframework.core.Variation;
  *
  * @author nozomihitomi
  */
-public interface IOperatorSelector {
+public interface OperatorSelector {
 
     /**
      * Method to select or generate the next operator based on some selection or
@@ -28,7 +28,7 @@ public interface IOperatorSelector {
     public Variation nextOperator();
 
     /**
-     * Method to update the internals of the adaptive operator selector or
+     * Method to update the internals of the operator selector or
      * generator based on the given CreditRepository
      *
      * @param reward received
@@ -56,22 +56,23 @@ public interface IOperatorSelector {
     public int getNumberOfIterations();
 
     /**
-     * Gets the operators currently available to the adaptive operator selector
+     * Gets the operators currently available to the operator selector
      *
-     * @return
+     * @return the operators currently available to the operator selector
      */
     public Collection<Variation> getOperators();
     
     /**
-     * Gets the names of the operators currently available to the adaptive operator selector
+     * Gets the names of the operators currently available to the operator selector
      *
-     * @return the names of the operators currently available to the adaptive operator selector
+     * @return the names of the operators currently available to the operator selector
      */
     public Set<String> getOperatorNames();
     
     /**
      * Gets the operator with the corresponding name
      *
+     * @param name the name of the operator
      * @return the operator with the corresponding name if it exists. Else null
      */
     public Variation getOperator(String name);

@@ -66,27 +66,17 @@ public class AdaptivePursuit extends ProbabilityMatching {
         }
     }
     
-    /**
-     * Updates the probabilities stored in the selector
-     */
     @Override
     public void update(Credit reward, Variation operator) {
         super.update(reward, operator);
     }
     
-    /**
-     * Clears the credit repository and resets the selection probabilities and updates the p_max
-     */
     @Override
     public void reset() {
         super.reset();
         this.pmax = 1 - (probabilities.size() - 1) * pmin; 
     }
 
-    /**
-     * Updates the selection probabilities of the operators according to the
-     * qualities of each operator.
-     */
     @Override
     protected void updateProbabilities(){
 
@@ -103,13 +93,7 @@ public class AdaptivePursuit extends ProbabilityMatching {
             }
         }
     }
-
-    /**
-     * Want to find the operator that has the maximum quality
-     *
-     * @param operator
-     * @return the current quality of the specified operator
-     */
+    
     @Override
     protected double maximizationFunction(Variation operator) {
         return qualities.get(operator);

@@ -6,7 +6,6 @@
 
 package aos.operatorselectors;
 
-import aos.nextoperator.AbstractOperatorSelector;
 import aos.creditassigment.Credit;
 import java.util.ArrayList;
 import java.util.Collection;

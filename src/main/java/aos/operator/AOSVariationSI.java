@@ -6,13 +6,13 @@
 package aos.operator;
 
 import aos.creditassigment.AbstractSetImprovement;
-import aos.nextoperator.IOperatorSelector;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import org.moeaframework.core.Solution;
+import aos.operatorselectors.OperatorSelector;
 
 /**
  * AOS strategy for set-improvement type credit assignment strategies.
@@ -23,7 +23,7 @@ public class AOSVariationSI extends AbstractAOSVariation {
     
     private final Collection<Solution> solutionHistory; 
    
-    public AOSVariationSI(IOperatorSelector operatorSelector, AbstractSetImprovement creditAssignment, int initialNFE) {
+    public AOSVariationSI(OperatorSelector operatorSelector, AbstractSetImprovement creditAssignment, int initialNFE) {
         super(operatorSelector, creditAssignment, initialNFE);
         this.solutionHistory = new ArrayList<>();
     }

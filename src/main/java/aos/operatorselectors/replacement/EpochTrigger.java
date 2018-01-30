@@ -5,7 +5,7 @@
  */
 package aos.operatorselectors.replacement;
 
-import aos.aos.IAOS;
+import aos.aos.AOS;
 
 /**
  * This replacement trigger will detect when an epoch has passed. Each epoch is
@@ -55,14 +55,8 @@ public class EpochTrigger implements ReplacementTrigger {
         this.offset = offset;
     }
 
-    /**
-     * Returns true if the current number of evaluations belongs to the next
-     * epoch
-     * @param aos the adaptive operator selector
-     * @return
-     */
     @Override
-    public boolean checkTrigger(IAOS aos) {
+    public boolean checkTrigger(AOS aos) {
         int nevals = aos.getNumberOfEvaluations();
         if (Math.floorDiv(nevals-offset, epochLength) > lastTriggeredEpoch) {
             this.lastTriggeredEpoch++;

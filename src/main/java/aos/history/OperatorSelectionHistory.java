@@ -22,9 +22,9 @@ public class OperatorSelectionHistory implements Serializable {
 
     private static final long serialVersionUID = -2323214225020219554L;
 
-    protected HashMap<Variation, Integer> operatorSelectionCount;
-    protected ArrayList<Selection> history;
-    protected int totalSelectionCount;
+    private final HashMap<Variation, Integer> operatorSelectionCount;
+    private final ArrayList<Selection> history;
+    private int totalSelectionCount;
 
     public OperatorSelectionHistory() {
         operatorSelectionCount = new HashMap();
@@ -86,8 +86,8 @@ public class OperatorSelectionHistory implements Serializable {
      * Gets the number of times the specified operator was selected using the
      * history's memory
      *
-     * @param operator
-     * @return
+     * @param operator the operator
+     * @return the number of times the specified operator was selected
      */
     public int getSelectionCount(Variation operator) {
         return operatorSelectionCount.get(operator);
@@ -131,14 +131,27 @@ public class OperatorSelectionHistory implements Serializable {
         private final Variation operator;
         private final int time;
 
+        /**
+         * Gets the operator
+         * @return the operator
+         */
         public Variation getOperator() {
             return operator;
         }
 
+        /**
+         * Gets the iteration when the operator was selected
+         * @return the iteration when the operator was selected
+         */
         public int getTime() {
             return time;
         }
 
+        /**
+         * Creates an entry for the selection history
+         * @param operator the operator
+         * @param time the iteration when the operator was selected
+         */
         public Selection(Variation operator, int time) {
             this.operator = operator;
             this.time = time;

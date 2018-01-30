@@ -5,9 +5,9 @@
  */
 package aos.operatorselectors.replacement;
 
-import aos.aos.IAOS;
 import java.util.Collection;
 import org.moeaframework.core.Variation;
+import aos.aos.AOS;
 
 /**
  * Classes implementing OperatorRemover will be responsible for selecting the
@@ -25,5 +25,5 @@ public interface OperatorRemover {
      * @param aos the adaptive operator selector
      * @return The collection of operators to remove
      */
-    public Collection<Variation> selectOperators(IAOS aos);
+    public Collection<Variation> selectOperators(AOS aos);
 }

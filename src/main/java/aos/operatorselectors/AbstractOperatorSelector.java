@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package aos.nextoperator;
+package aos.operatorselectors;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,7 +21,7 @@ import org.moeaframework.core.Variation;
  *
  * @author nozomihitomi
  */
-public abstract class AbstractOperatorSelector implements IOperatorSelector {
+public abstract class AbstractOperatorSelector implements OperatorSelector {
 
     /**
      * The number of times nextHeuristic() is called
@@ -134,19 +134,11 @@ public abstract class AbstractOperatorSelector implements IOperatorSelector {
         iterations++;
     }
 
-    /**
-     * Returns the number of times nextOperator() has been called
-     *
-     * @return the number of times nextOperator() has been called
-     */
     @Override
     public int getNumberOfIterations() {
         return iterations;
     }
 
-    /**
-     * Resets stored qualities and iteration count
-     */
     @Override
     public void reset() {
         resetQualities();
@@ -169,11 +161,6 @@ public abstract class AbstractOperatorSelector implements IOperatorSelector {
         return qualities;
     }
 
-    /**
-     * Gets the operators available to the hyper-operator.
-     *
-     * @return
-     */
     @Override
     public Collection<Variation> getOperators() {
         return operators;

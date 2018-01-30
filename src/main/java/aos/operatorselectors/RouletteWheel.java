@@ -5,7 +5,6 @@
  */
 package aos.operatorselectors;
 
-import aos.nextoperator.AbstractOperatorSelector;
 import aos.creditassigment.Credit;
 import java.util.Collection;
 import java.util.HashMap;
@@ -47,13 +46,6 @@ public class RouletteWheel extends AbstractOperatorSelector {
         reset();
     }
 
-    /**
-     * Will return the next operator that gets selected based on probability
-     * proportional to a operators credits. Each operator gets selected with a
-     * minimum probability of pmin
-     *
-     * @return
-     */
     @Override
     public Variation nextOperator() {
         double p = PRNG.nextDouble();
@@ -89,9 +81,6 @@ public class RouletteWheel extends AbstractOperatorSelector {
         return sum;
     }
 
-    /**
-     * Clears the credit repository and resets the selection probabilities
-     */
     @Override
     public void reset() {
         super.resetQualities();
@@ -133,11 +122,6 @@ public class RouletteWheel extends AbstractOperatorSelector {
         }
     }
 
-    /**
-     * Selection probabilities are updated
-     * @param reward given to the operator
-     * @param operator to be rewarded
-     */
     @Override
     public void update(Credit reward, Variation operator) {
         qualities.put(operator, qualities.get(operator)+reward.getValue());

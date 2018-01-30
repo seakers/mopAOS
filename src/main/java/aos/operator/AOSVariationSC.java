@@ -6,8 +6,8 @@
 package aos.operator;
 
 import aos.creditassigment.AbstractSetContribution;
-import aos.nextoperator.IOperatorSelector;
 import java.util.Map;
+import aos.operatorselectors.OperatorSelector;
 
 /**
  * AOS strategy for set-contribution type credit assignment strategies.
@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class AOSVariationSC extends AbstractAOSVariation {
    
-    public AOSVariationSC(IOperatorSelector operatorSelector, AbstractSetContribution creditAssignment, int initialNFE) {
+    public AOSVariationSC(OperatorSelector operatorSelector, AbstractSetContribution creditAssignment, int initialNFE) {
         super(operatorSelector, creditAssignment, initialNFE);
     }
 

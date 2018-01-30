@@ -5,11 +5,11 @@
  */
 package aos.operatorselectors.replacement;
 
-import aos.aos.IAOS;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import org.moeaframework.core.Variation;
+import aos.aos.AOS;
 
 /**
  * This abstract class implements operator remover but ensures that any
@@ -29,7 +29,8 @@ public abstract class AbstractOperatorRemover implements OperatorRemover {
      * Collection of operators that cannot be removed. For example, may want to
      * keep certain knowledge-independent operators
      *
-     * @param permanentOperators
+     * @param permanentOperators the operators that cannot be removed from the
+     * aos
      */
     public AbstractOperatorRemover(Collection<Variation> permanentOperators) {
         this.permanentOperators = permanentOperators;
@@ -46,7 +47,7 @@ public abstract class AbstractOperatorRemover implements OperatorRemover {
      * @return The collection of operators to remove
      */
     @Override
-    public Collection<Variation> selectOperators(IAOS aos) {
+    public Collection<Variation> selectOperators(AOS aos) {
         ArrayList<Variation> out = new ArrayList();
         HashMap<Variation, Double> qualities = aos.getOperatorSelector().getQualities();
         HashMap<Variation, Double> operatorMetric = new HashMap<>(qualities.size());
@@ -84,14 +85,14 @@ public abstract class AbstractOperatorRemover implements OperatorRemover {
      * @param operator the operator to compute the metric for
      * @return the operator selected for removal
      */
-    protected abstract double computeMetric(Variation operator, IAOS aos);
+    protected abstract double computeMetric(Variation operator, AOS aos);
 
     /**
      * Scans over the metrics of each operator and retrieves the one with the
      * lowest metric value
      *
-     * @param metric
-     * @return
+     * @param metric a map of operators and some performance metric
+     * @return the operator that has the lowest value for performance
      */
     private Variation getNextLowest(HashMap<Variation, Double> metric) {
         double minMetric = Double.POSITIVE_INFINITY;
@@ -109,7 +110,7 @@ public abstract class AbstractOperatorRemover implements OperatorRemover {
      * Gets the collection of permanent operators that are prohibited from being
      * selected for removal
      *
-     * @return
+     * @return the permanent operators
      */
     public Collection<Variation> getPermanentOperators() {
         return permanentOperators;

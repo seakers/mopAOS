@@ -9,13 +9,13 @@ import aos.creditassigment.ICreditAssignment;
 import aos.history.CreditHistory;
 import aos.history.OperatorQualityHistory;
 import aos.history.OperatorSelectionHistory;
-import aos.nextoperator.IOperatorSelector;
 import aos.operator.AbstractAOSVariation;
 import java.util.HashSet;
 import java.util.Set;
 import org.moeaframework.algorithm.AbstractEvolutionaryAlgorithm;
 import org.moeaframework.core.Problem;
 import org.moeaframework.core.Solution;
+import aos.operatorselectors.OperatorSelector;
 
 /**
  * An MOEA with an adaptive operator selector controlling the use of the
@@ -23,7 +23,7 @@ import org.moeaframework.core.Solution;
  *
  * @author nozomihitomi
  */
-public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
+public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements AOS {
 
     /**
      * The solution attribute to keep track of when the solution was created
@@ -124,6 +124,7 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
     @Override
     protected void iterate() {
         ea.step();
+        aosStrategy.update();
         
         //record solutions if desired
         if (recordAllSolutions) {
@@ -155,7 +156,7 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements IAOS {
     }
 
     @Override
-    public IOperatorSelector getOperatorSelector() {
+    public OperatorSelector getOperatorSelector() {
         return aosStrategy.getOperatorSelector();
     }
 

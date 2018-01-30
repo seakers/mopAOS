@@ -10,11 +10,11 @@ import aos.creditassigment.ICreditAssignment;
 import aos.history.CreditHistory;
 import aos.history.OperatorQualityHistory;
 import aos.history.OperatorSelectionHistory;
-import aos.nextoperator.IOperatorSelector;
 import java.util.Collection;
 import java.util.Map;
 import org.moeaframework.core.Solution;
 import org.moeaframework.core.Variation;
+import aos.operatorselectors.OperatorSelector;
 
 /**
  * Abstract class for an AOS variation
@@ -27,7 +27,7 @@ public abstract class AbstractAOSVariation implements AOSVariation {
      * The solution attribute to keep track of which operator created it
      */
     public static final String OPERATOR_ATTRIBUTE = "operator";
-    
+
     /**
      * The solution attribute to keep track of when the solution was created
      */
@@ -36,7 +36,7 @@ public abstract class AbstractAOSVariation implements AOSVariation {
     /**
      * The operator selection strategy
      */
-    private final IOperatorSelector operatorSelector;
+    private final OperatorSelector operatorSelector;
 
     /**
      * Credit assignment strategy
@@ -67,7 +67,7 @@ public abstract class AbstractAOSVariation implements AOSVariation {
      */
     private int nfeCounter;
 
-    public AbstractAOSVariation(IOperatorSelector operatorSelector, ICreditAssignment creditAssignment, int initialNFE) {
+    public AbstractAOSVariation(OperatorSelector operatorSelector, ICreditAssignment creditAssignment, int initialNFE) {
         this.operatorSelector = operatorSelector;
         this.creditAssignment = creditAssignment;
         this.operatorSelectionHistory = new OperatorSelectionHistory();
@@ -136,13 +136,16 @@ public abstract class AbstractAOSVariation implements AOSVariation {
         for (Variation operator : operatorSelector.getOperators()) {
             qualityHistory.add(operator, currentQualities.get(operator), nfeCounter);
         }
+
+        internalReset();
     }
 
     /**
      * Computes the credits for any operators used since the last time credits
      * were computed
      *
-     * @return
+     * @return a map containing the credits for the operators used since the
+     * last time credits were computed
      */
     protected abstract Map<String, Double> computeCredits();
 
@@ -172,7 +175,7 @@ public abstract class AbstractAOSVariation implements AOSVariation {
      *
      * @return the operator selection strategy
      */
-    public IOperatorSelector getOperatorSelector() {
+    public OperatorSelector getOperatorSelector() {
         return operatorSelector;
     }
 

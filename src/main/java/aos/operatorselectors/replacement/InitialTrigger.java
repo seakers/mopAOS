@@ -5,7 +5,7 @@
  */
 package aos.operatorselectors.replacement;
 
-import aos.aos.IAOS;
+import aos.aos.AOS;
 
 /**
  * This trigger checks to see if a certain number of function evaluations has
@@ -34,7 +34,7 @@ public class InitialTrigger implements ReplacementTrigger {
     }
 
     @Override
-    public boolean checkTrigger(IAOS aos) {
+    public boolean checkTrigger(AOS aos) {
         int nevals = aos.getNumberOfEvaluations();
         if (!used && nevals >= nfe) {
             this.used = true;

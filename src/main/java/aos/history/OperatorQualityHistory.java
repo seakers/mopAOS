@@ -23,6 +23,9 @@ public class OperatorQualityHistory implements Serializable {
 
     protected HashMap<Variation, ArrayList<QualityRecord>> history;
 
+    /**
+     * Creates a new history
+     */
     public OperatorQualityHistory() {
         history = new HashMap();
     }
@@ -66,7 +69,7 @@ public class OperatorQualityHistory implements Serializable {
     /**
      * Gets the latest quality of each operator
      *
-     * @return
+     * @return the latest quality of each operator
      */
     public HashMap<Variation, Double> getLatest() {
         HashMap<Variation, Double> out = new HashMap<>();

@@ -35,7 +35,7 @@ public class QualityRecord {
     /**
      * Gets the quality value
      *
-     * @return
+     * @return the quality value
      */
     public double getQuality() {
         return quality;
@@ -44,7 +44,7 @@ public class QualityRecord {
     /**
      * Gets the iteration at which the quality is recorded
      *
-     * @return
+     * @return the iteration at which the quality is recorded
      */
     public int getIteration() {
         return iteration;

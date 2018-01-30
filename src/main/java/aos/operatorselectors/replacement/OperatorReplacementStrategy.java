@@ -5,9 +5,9 @@
  */
 package aos.operatorselectors.replacement;
 
-import aos.aos.IAOS;
 import java.util.Collection;
 import org.moeaframework.core.Variation;
+import aos.aos.AOS;
 
 /**
  * The operator replacement strategy relies on an operator remover that selects
@@ -49,9 +49,9 @@ public class OperatorReplacementStrategy {
     /**
      * Checks to see if the operators should be removed at this point in time.
      * @param aos the adaptive operator selector
-     * @return 
+     * @return true if the replacement criteria is triggered. Else false
      */
-    public boolean checkTrigger(IAOS aos) {
+    public boolean checkTrigger(AOS aos) {
         return this.trigger.checkTrigger(aos);
     }
 
@@ -60,7 +60,7 @@ public class OperatorReplacementStrategy {
      * @param aos the adaptive operator selector
      * @return The operators that were removed
      */
-    public Collection<Variation> removeOperators(IAOS aos) {
+    public Collection<Variation> removeOperators(AOS aos) {
         Collection<Variation> operatorsToRemove = operatorRemover.selectOperators(aos);
         for (Variation operator : operatorsToRemove) {
             aos.getOperatorSelector().removeOperator(operator);
@@ -74,7 +74,7 @@ public class OperatorReplacementStrategy {
      * @param nOperators the desired number of operators to add
      * @return  The operators that were added
      */
-    public Collection<Variation> addNewOperator(IAOS aos, int nOperators){
+    public Collection<Variation> addNewOperator(AOS aos, int nOperators){
         Collection<Variation> newOperators = operatorCreator.createOperator(nOperators);
         for(Variation newOp : newOperators){
             aos.getOperatorSelector().addOperator(newOp);
@@ -82,14 +82,26 @@ public class OperatorReplacementStrategy {
         return newOperators;
     }
 
+    /**
+     * Gets the method to remove operators
+     * @return the method to remove operators
+     */
     public OperatorRemover getOperatorRemover() {
         return operatorRemover;
     }
 
+    /**
+     * Gets trigger used to indicate the replacement of operators
+     * @return trigger used to indicate the replacement of operators
+     */
     public ReplacementTrigger getTrigger() {
         return trigger;
     }
 
+    /**
+     * Gets the method to create operators
+     * @return the method to create operators
+     */
     public OperatorCreator getOperatorCreator() {
         return operatorCreator;
     }

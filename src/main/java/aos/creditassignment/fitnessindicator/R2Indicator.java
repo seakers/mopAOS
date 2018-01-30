@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Population;
 import org.moeaframework.core.Problem;
 import org.moeaframework.core.Solution;
@@ -54,9 +53,9 @@ public class R2Indicator implements IIndicator {
     /**
      * Constructor to initialize the weight vectors
      *
-     * @param problem
+     * @param problem the problem being solved
      * @param numVecs number of vectors
-     * @param referencePoint
+     * @param referencePoint the reference point
      */
     public R2Indicator(Problem problem, int numVecs, Solution referencePoint){
         wtVecs = new ArrayList<>();
@@ -64,6 +63,11 @@ public class R2Indicator implements IIndicator {
         this.referencePoint = referencePoint;
     }
     
+    /**
+     * Computes the R2 indicator value
+     * @param population the population of solutions 
+     * @return the R2 indicator value
+     */
     public double computeR2(Population population){
         double value = 0.0;
         for(WtVector vec : wtVecs){
@@ -103,8 +107,8 @@ public class R2Indicator implements IIndicator {
     }
 
     /**
-     * This method is a fast R2 contributor computation based on a combiniation
-     * of Díaz-Manríquez, Alan, Gregorio Toscano-Pulido, Carlos A Coello Coello,
+     * This method is a fast R2 contributor computation based on a combination
+     * of Diaz-Manriquez, Alan, Gregorio Toscano-Pulido, Carlos A Coello Coello,
      * and Ricardo Landa-Becerra. 2013. “A Ranking Method Based on the R2
      * Indicator for Many-Objective Optimization.” 2013 IEEE Congress on
      * Evolutionary Computation, CEC 2013: 1523–1530.
@@ -116,8 +120,8 @@ public class R2Indicator implements IIndicator {
      * Computes the R2 contribution by keeping the minimum and the 2nd minimum
      * values of the population utility for R2
      *
-     * @param pop
-     * @param refPt
+     * @param pop the population of solutions
+     * @param refPt the reference point
      */
     private void computeContributors(Population pop, Solution refPt) {
         minInd1 = new int[wtVecs.size()];
@@ -176,14 +180,14 @@ public class R2Indicator implements IIndicator {
     
     /**
      * In this implementation the order of the inputs
-     * matter. formula based on Phan, D. H., & Suzuki, J. (2013). R2-IBEA: R2
+     * matter. formula based on Phan, D. H., and Suzuki, J. (2013). R2-IBEA: R2
      * indicator based evolutionary algorithm for multiobjective optimization.
      * IEEE Congress on Evolutionary Computation, 1836–1845.
      * doi:10.1109/CEC.2013.6557783
      *
-     * @param solnA
-     * @param solnB
-     * @return
+     * @param solnA solution A
+     * @param solnB solution B
+     * @return the binary R2 indicator value 
      */
     @Override
     public double compute(Solution solnA, Solution solnB) {
@@ -202,9 +206,8 @@ public class R2Indicator implements IIndicator {
      * vector
      *
      * @param vec weight vector
-     * @param pop
-     * @param refPt reference point
-     * @return the utility of the nondominated population
+     * @param pop the population of solutions
+     * @return the utility of the population
      */
     protected double popUtility(WtVector vec, Population pop) {
         double popUtil = Double.POSITIVE_INFINITY;
@@ -221,7 +224,7 @@ public class R2Indicator implements IIndicator {
      * reference point and z is the objective value.
      *
      * @param vec weight vector
-     * @param solution
+     * @param solution the solution
      * @param refPt reference point
      * @return utility of a solution wrt to a weight vectorq
      */
@@ -239,8 +242,8 @@ public class R2Indicator implements IIndicator {
      * if the weights can be loaded and false if the weights data is
      * unavailable.
      *
-     * @param numObj
-     * @param numVecs
+     * @param numObj the number of objectives
+     * @param numVecs number of vectors
      */
     private void initializeWts(int numObj,int numVecs) {
         
@@ -301,10 +304,19 @@ public class R2Indicator implements IIndicator {
          */
         private final double[] weights;
 
+        /**
+         * Creates a new weight vector
+         * @param weights the weights for this vector
+         */
         public WtVector(double[] weights) {
             this.weights = weights;
         }
 
+        /**
+         * Gets the ith weight of a vector
+         * @param i the index of the weight
+         * @return the ith weight of a vector
+         */
         public double get(int i) {
             return weights[i];
         }

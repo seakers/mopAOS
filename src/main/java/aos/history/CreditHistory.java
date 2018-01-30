@@ -26,10 +26,17 @@ public class CreditHistory implements Serializable {
 
     private int maxIteration = 0;
 
+    /**
+     * Creates a new history
+     */
     public CreditHistory() {
         history = new HashMap();
     }
 
+    /**
+     * Gets the operators that have been recorded in this history 
+     * @return the operators that have been recorded in this history
+     */
     public Collection<Variation> getOperators() {
         return history.keySet();
     }
@@ -39,22 +46,22 @@ public class CreditHistory implements Serializable {
      * the reward is issued. If the operator is not currently in the history, it
      * is added to the set of operators included in this history.
      *
-     * @param operator
-     * @param reward
+     * @param operator the operator receiving the credit
+     * @param credit the credit
      */
-    public void add(Variation operator, Credit reward) {
+    public void add(Variation operator, Credit credit) {
         if (!history.containsKey(operator)) {
             history.put(operator, new ArrayList());
         }
-        history.get(operator).add(reward);
-        maxIteration = Math.max(maxIteration, reward.getIteration());
+        history.get(operator).add(credit);
+        maxIteration = Math.max(maxIteration, credit.getIteration());
     }
 
     /**
      * Returns the collection of rewards received by a specific operator
      *
-     * @param operator
-     * @return
+     * @param operator the operator
+     * @return rewards received by the specified operator
      */
     public Collection<Credit> getHistory(Variation operator) {
         return history.get(operator);
@@ -63,7 +70,7 @@ public class CreditHistory implements Serializable {
     /**
      * Returns a map of the last rewards received by each operator
      *
-     * @return
+     * @return a map of the last rewards received by each operator
      */
     public HashMap<Variation, Credit> getLatest() {
         HashMap<Variation, Credit> out = new HashMap<>();
@@ -83,9 +90,9 @@ public class CreditHistory implements Serializable {
     }
 
     /**
-     * Returns the iteration that the latest rewarded was given
+     * Returns the iteration when the latest rewarded was given
      *
-     * @return
+     * @return the iteration when the latest rewarded was given
      */
     public int getMaxIteration() {
         return maxIteration;

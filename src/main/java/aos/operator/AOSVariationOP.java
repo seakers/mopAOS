@@ -6,12 +6,12 @@
 package aos.operator;
 
 import aos.creditassigment.AbstractOffspringParent;
-import aos.nextoperator.IOperatorSelector;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import org.moeaframework.core.Solution;
+import aos.operatorselectors.OperatorSelector;
 
 /**
  * AOS strategy for offspring-parent type credit assignment strategies.
@@ -22,7 +22,7 @@ public class AOSVariationOP extends AbstractAOSVariation {
     
     private final Collection<OffspringParentGroup> solutionHistory;
     
-    public AOSVariationOP(IOperatorSelector operatorSelector, AbstractOffspringParent creditAssignment, int initialNFE) {
+    public AOSVariationOP(OperatorSelector operatorSelector, AbstractOffspringParent creditAssignment, int initialNFE) {
         super(operatorSelector, creditAssignment, initialNFE);
         this.solutionHistory = new ArrayList<>();
     }

@@ -17,12 +17,11 @@ import org.moeaframework.core.Solution;
 public interface IIndicator {
 
     /**
-     * Computes the contributions of each of the solutions in the nondominated
+     * Computes the contributions of each of the solutions in the
      * population. Returns a list of contributions in the order of the
      * population's index from get() method
      *
-     * @param popA
-     * @param refPt some indicators require a reference point
+     * @param popA the population of solutions 
      * @return a list of contributions in the order of the population's Iterator
      */
     public List<Double> computeContributions(Population popA);
@@ -31,30 +30,33 @@ public interface IIndicator {
      * Computes the indicator value when comparing solution A to solution B.
      * Used in IBEA setting
      *
-     * @param solnA
-     * @param solnB
-     * @param refPt some indicators require a reference point
-     * @return
+     * @param solnA solution A
+     * @param solnB solution B
+     * @return the binary indicator value 
      */
     public double compute(Solution solnA, Solution solnB);
 
     /**
-     * Computes the contributions of specified solution to the nondominated
+     * Computes the contributions of specified solution to the
      * population if inserted. It is assumed that the solution has already been
      * inserted into the population. Returns the contribution of the offspring
      * to the indicator value
      *
-     * @param pop the population with the solution of interest. objectives are
-     * normalized
-     * @param offspring the offspring just inserted into the population.
-     * objectives are normalized
-     * @param refPt some indicators require a reference point
-     * @return
+     * @param pop the population with the solution of interest.
+     * @param solution the solution just inserted into the population.
+     * @return indicator value representing the solution's contribution
      */
-    public double computeContribution(Population pop, Solution offspring);
+    public double computeContribution(Population pop, Solution solution);
 
-    
+    /**
+     * Gets the reference point for the indicator
+     * @return the reference point for the indicator
+     */
     public Solution getReferencePoint();
     
+    /**
+     * Sets the reference point for the indicator
+     * @param solution the reference point for the indicator
+     */
     public void setReferencePoint(Solution solution);
 }

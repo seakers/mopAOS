@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package aos.creditassignment.fitnessindicator;
+package aos.util;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -38,7 +38,7 @@ public class SortedLinkedList<T> extends LinkedList<T> implements Cloneable{
     
     /**
      * Constructor to create an empty list
-     * @param comparator 
+     * @param comparator the comparator to use to order the list
      */
     private SortedLinkedList(Comparator<T> comparator) {
         super();
@@ -81,12 +81,13 @@ public class SortedLinkedList<T> extends LinkedList<T> implements Cloneable{
             throw new IllegalArgumentException("Item not found in list");
         } else {
             int mid = (max - min) / 2 + min;
-            if (comparator.compare(this.get(mid), item) == 1) {
-                return binaryFind(item, min, mid - 1);
-            } else if (comparator.compare(this.get(mid), item) == -1) {
-                return binaryFind(item, mid + 1, max);
-            } else {
-                return mid;
+            switch (comparator.compare(this.get(mid), item)) {
+                case 1:
+                    return binaryFind(item, min, mid - 1);
+                case -1:
+                    return binaryFind(item, mid + 1, max);
+                default:
+                    return mid;
             }
         }
         }catch(IndexOutOfBoundsException ex){
@@ -124,21 +125,16 @@ public class SortedLinkedList<T> extends LinkedList<T> implements Cloneable{
     
     private int recursFindInsert(T item, int min, int max){
         if (max - min < 2) {
-//            if (comparator.compare(this.get(min), item) == 1) {
-//                return min;
-//            } else if (comparator.compare(this.get(min), item) == -1) {
-//                return max;
-//            } else {
                 return min + 1;
-//            }
         } else {
             int mid = (max - min) / 2 + min;
-            if (comparator.compare(this.get(mid), item) == 1) {
-                return recursFindInsert(item, min, mid);
-            } else if (comparator.compare(this.get(mid), item) == -1) {
-                return recursFindInsert(item, mid, max);
-            } else {
-                return mid + 1;
+            switch (comparator.compare(this.get(mid), item)) {
+                case 1:
+                    return recursFindInsert(item, min, mid);
+                case -1:
+                    return recursFindInsert(item, mid, max);
+                default:
+                    return mid + 1;
             }
         }
     }
@@ -181,9 +177,9 @@ public class SortedLinkedList<T> extends LinkedList<T> implements Cloneable{
     }
     
     /**
-     * Adds to end of list if order is maintained. Boolean returned true if item was added. Else false;
-     * @param e
-     * @return 
+     * Adds to end of list if order is maintained. 
+     * @param e the element to add to the list
+     * @return  true if item was added. Else false;
      */
     private boolean flaggedAddLast(T e){
         int compare = comparator.compare(this.getLast(), e);
@@ -203,12 +199,12 @@ public class SortedLinkedList<T> extends LinkedList<T> implements Cloneable{
     }
     
     /**
-     * Adds to head of list if order is maintained. Boolean returned true if item was added. Else false;
-     * @param e
-     * @return 
+     * Adds to head of list if order is maintained. 
+     * @param e the element to add to the list
+     * @return Boolean returned true if item was added. Else false;
      */
     private boolean flaggedAddFirst(T e) {
-        if(this.size()==0){
+        if(this.isEmpty()){
             this.add(0, e);
             return true;
         }
@@ -222,7 +218,7 @@ public class SortedLinkedList<T> extends LinkedList<T> implements Cloneable{
     
     /**
      * Copies the elements within the list to a new list
-     * @return 
+     * @return a cloned list
      */
     @Override
     public SortedLinkedList<T> clone(){

@@ -33,7 +33,7 @@ public class OffspringParentDecomposition extends AbstractOffspringParent {
      * Sets the ideal point used in decomposition methods. Update the ideal
      * point each time compute is called.
      *
-     * @param idealPoint
+     * @param idealPoint the ideal point
      */
     public void setIdealPoint(double[] idealPoint) {
         this.idealPoint = idealPoint;
@@ -43,7 +43,7 @@ public class OffspringParentDecomposition extends AbstractOffspringParent {
      * Sets the weights for the current problem. Update the weights each time
      * compute is called
      *
-     * @param weights
+     * @param weights the weights
      */
     public void setWeights(double[] weights) {
         this.weights = weights;

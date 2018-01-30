@@ -5,10 +5,10 @@
  */
 package aos.operatorselectors.replacement;
 
-import aos.aos.IAOS;
+import aos.aos.AOS;
 
 /**
- *
+ * The criteria that triggers the replacement of operators in the AOS
  * @author nozomihitomi
  */
 public interface ReplacementTrigger {
@@ -19,7 +19,7 @@ public interface ReplacementTrigger {
      * far
      *
      * @param aos the adaptive operator selector
-     * @return
+     * @return true if the replacement criteria is triggered. Else false
      */
-    public boolean checkTrigger(IAOS aos);
+    public boolean checkTrigger(AOS aos);
 }

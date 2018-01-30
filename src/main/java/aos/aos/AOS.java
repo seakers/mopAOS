@@ -11,55 +11,55 @@ import aos.history.OperatorQualityHistory;
 import aos.history.OperatorSelectionHistory;
 import aos.creditassigment.ICreditAssignment;
 import org.moeaframework.core.Algorithm;
-import aos.nextoperator.IOperatorSelector;
+import aos.operatorselectors.OperatorSelector;
 
 /**
  * AOS is the framework using a credit assignment and operator selection strategy 
  * @author nozomihitomi
  */
-public interface IAOS extends Algorithm{
+public interface AOS extends Algorithm{
     
     /**
      * Returns the selection history stored in the AOS
-     * @return 
+     * @return the selection history stored in the AOS
      */
     public OperatorSelectionHistory getSelectionHistory();
     
     /**
-     * gets the quality history stored for each operator in the AOS
-     * @return 
+     * Gets the quality history stored for each operator in the AOS
+     * @return the quality history stored for each operator in the AOS
      */
     public OperatorQualityHistory getQualityHistory();
     
     /**
-     * gets the credit history stored for each operator in the AOS
+     * Gets the credit history stored for each operator in the AOS
      *
-     * @return
+     * @return the credit history stored for each operator in the AOS
      */
     public CreditHistory getCreditHistory();
     
     /**
      * Gets the credit definition being used.
-     * @return 
+     * @return the credit definition being used.
      */
     public ICreditAssignment getCreditAssignment();
     
     /**
      * Gets the strategy that is used to generate or select the next operator 
-     * @return 
+     * @return the strategy that is used to generate or select the next operator 
      */
-    public IOperatorSelector getOperatorSelector();
+    public OperatorSelector getOperatorSelector();
     
     
     /**
      * Sets the adaptive operator selector's name
-     * @param name
+     * @param name the name of the aos strategy
      */
     public void setName(String name);
     
     /**
      * Gets the adaptive operator selector's name
-     * @return 
+     * @return the adaptive operator selector's name
      */
     public String getName();
 }

@@ -5,9 +5,9 @@
  */
 package aos.operatorselectors.replacement;
 
-import aos.aos.IAOS;
 import java.util.Collection;
 import org.moeaframework.core.Variation;
+import aos.aos.AOS;
 
 /**
  * This class will remove n operators that have the lowest quality as seen by
@@ -40,14 +40,6 @@ public class RemoveNLowest extends AbstractOperatorRemover {
         this.numToRemove = numToRemove;
     }
 
-    /**
-     * Returns true if the number of operators selected is greater than or equal
-     * to the desired number of operators to removes
-     *
-     * @param numOperators number of operators to select from to remove
-     * operators. number should not count the number of permanent operators
-     * @return
-     */
     @Override
     protected boolean finished(int numOperators) {
         if (numToRemove > numOperators) {
@@ -57,16 +49,8 @@ public class RemoveNLowest extends AbstractOperatorRemover {
         }
     }
 
-    /**
-     * The performance of the operator is just the quality as computed by the
-     * AOS operator selector
-     *
-     * @param operator the operator to compute the metric for
-     * @param aos the adaptive operator selector
-     * @return the operator selected for removal
-     */
     @Override
-    protected double computeMetric(Variation operator, IAOS aos) {
+    protected double computeMetric(Variation operator, AOS aos) {
         return aos.getOperatorSelector().getQualities().get(operator);
     }
 }

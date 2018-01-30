@@ -49,13 +49,13 @@ public class FRRMAB extends AbstractMAB {
     /**
      * This implementation inserts the reward in the FIR sliding window
      *
-     * @param reward
-     * @param heuristic
+     * @param credit the credit 
+     * @param operator the operator receiving the credit
      */
     @Override
-    public void update(Credit reward, Variation heuristic) {
+    public void update(Credit credit, Variation operator) {
         //update the sliding window
-        window.addLast(new FIR(heuristic, reward));
+        window.addLast(new FIR(operator, credit));
         if (window.size() > windowSize) {
             window.removeFirst();
         }

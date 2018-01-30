@@ -6,14 +6,13 @@
 
 package aos.operatorselectors;
 
-import aos.nextoperator.AbstractOperatorSelector;
 import aos.creditassigment.Credit;
 import java.util.Collection;
 import org.moeaframework.core.Variation;
 
 /**
- * RandomSelect randomly selects a heuristic with uniform probability from the 
- * given set of heuristics
+ * RandomSelect randomly selects an operator with uniform probability from the 
+ * given set of operators
  * @author nozomihitomi
  */
 public class RandomSelect extends AbstractOperatorSelector{
@@ -21,17 +20,12 @@ public class RandomSelect extends AbstractOperatorSelector{
     /**
      * RandomSelect does not really utilize the credit repository so any 
      * repository will do
-     * @param heuristics from which to select from 
+     * @param operators from which to select from 
      */
-    public RandomSelect(Collection<Variation> heuristics) {
-        super(heuristics);
+    public RandomSelect(Collection<Variation> operators) {
+        super(operators);
     }
 
-    /**
-     * Randomly selects the next heuristic from the set of heuristics with 
-     * uniform probability
-     * @return 
-     */
     @Override
     public Variation nextOperator() {
         incrementIterations();

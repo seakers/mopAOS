@@ -9,7 +9,7 @@ package aos.creditassigment;
 import java.io.Serializable;
 
 /**
- *
+ * Credit is rewarded to an operator by the credit assignment strategy.
  * @author nozomihitomi
  */
 public class Credit implements Comparable<Credit>, Serializable{
@@ -62,7 +62,7 @@ public class Credit implements Comparable<Credit>, Serializable{
 
     /**
      * Compares the value of this Credit with a specified Credit
-     * @param o
+     * @param o the other credit to compare with
      * @return 0 if this Credit equals the specified Credit.
      * returns -1 if this Credit is less than the specified Credit.
      * returns 1 if this Credit is greater than the specified Credit.

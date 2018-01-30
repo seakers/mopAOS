@@ -8,7 +8,6 @@ package aos.example;
 import aos.IO.AOSHistoryIO;
 import aos.aos.AOSMOEA;
 import aos.creditassignment.offspringparent.OffspringParentDomination;
-import aos.nextoperator.IOperatorSelector;
 import aos.operator.AOSVariationOP;
 import aos.operatorselectors.ProbabilityMatching;
 import java.io.File;
@@ -28,6 +27,7 @@ import org.moeaframework.core.operator.TournamentSelection;
 import org.moeaframework.core.operator.real.PM;
 import org.moeaframework.core.operator.real.SBX;
 import org.moeaframework.problem.CEC2009.UF1;
+import aos.operatorselectors.OperatorSelector;
 
 /**
  *
@@ -60,10 +60,10 @@ public class TestCase {
         operators.add(new PM(mutProbability, mutDistributionIndex));
 
         //create operator selector
-        IOperatorSelector operatorSelector = new ProbabilityMatching(operators, 0.8, 0.8);
+        OperatorSelector operatorSelector = new ProbabilityMatching(operators, 0.8, 0.8);
         //create credit assignment
         OffspringParentDomination creditAssignment = new OffspringParentDomination(1, 0, 0);
-        
+
         //create AOS strategy
         AOSVariationOP aosStrategy = new AOSVariationOP(operatorSelector,creditAssignment,populationSize);
 

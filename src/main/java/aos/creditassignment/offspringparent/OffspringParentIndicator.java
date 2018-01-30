@@ -15,7 +15,7 @@ import org.moeaframework.core.Solution;
  * population to compute the fitness of individuals via quality indicators. It
  * does not compute the quality of the population
  *
- * Indicator fitness calculation based on Zitzler, E., & Simon, K. (2004).
+ * Indicator fitness calculation based on Zitzler, E., and Simon, K. (2004).
  * Indicator-Based Selection in Multiobjective Search. 8th International
  * Conference on Parallel Problem Solving from Nature (PPSN VIII), 832–842.
  * doi:10.1007/978-3-540-30217-9_84
@@ -30,9 +30,9 @@ public class OffspringParentIndicator extends AbstractOffspringParent {
     private final IIndicator indicator;
 
     /**
-     *
+     * Creates a new indicator-based credit assignment strategy
      * @param indicator The indicator to use
-     * @param prob
+     * @param prob the problem being solved
      */
     public OffspringParentIndicator(IIndicator indicator, Problem prob) {
         super();

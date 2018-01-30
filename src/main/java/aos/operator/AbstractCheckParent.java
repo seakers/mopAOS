@@ -24,7 +24,8 @@ public abstract class AbstractCheckParent implements CheckParents, Variation {
      *
      * @param parents the parent solutions
      * @return the offspring solution
-     * @throws CheckParentException
+     * @throws CheckParentException if the parent solutions don't meet the
+     * criteria
      */
     @Override
     public Solution[] evolve(Solution[] parents) throws CheckParentException {
@@ -38,8 +39,8 @@ public abstract class AbstractCheckParent implements CheckParents, Variation {
     /**
      * Evolves the parents after they have passed through the Parent check.
      *
-     * @param parents
-     * @return
+     * @param parents parent solutions
+     * @return the offspring solutions after operation is applied
      */
     public abstract Solution[] evolveParents(Solution[] parents);
 

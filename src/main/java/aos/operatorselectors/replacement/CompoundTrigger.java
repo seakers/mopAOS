@@ -5,8 +5,8 @@
  */
 package aos.operatorselectors.replacement;
 
-import aos.aos.IAOS;
 import java.util.Collection;
+import aos.aos.AOS;
 
 /**
  * A class to hold multiple triggers . Each trigger within the compound trigger
@@ -23,7 +23,7 @@ public class CompoundTrigger implements ReplacementTrigger {
     }
 
     @Override
-    public boolean checkTrigger(IAOS aos) {
+    public boolean checkTrigger(AOS aos) {
         boolean out = false;
         for (ReplacementTrigger rt : triggers) {
             if (rt.checkTrigger(aos)) {

@@ -9,7 +9,7 @@ import aos.operatorselectors.AdaptivePursuit;
 import aos.operatorselectors.FRRMAB;
 import aos.operatorselectors.ProbabilityMatching;
 import aos.operatorselectors.RandomSelect;
-import aos.nextoperator.AbstractOperatorSelector;
+import aos.operatorselectors.AbstractOperatorSelector;
 import aos.operatorselectors.AllOperators;
 import java.util.Collection;
 import org.moeaframework.core.Variation;
