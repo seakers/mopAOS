@@ -22,6 +22,12 @@ public class AOSVariationOP extends AbstractAOSVariation {
     
     private final Collection<OffspringParentGroup> solutionHistory;
     
+    /**
+     * Creates a new AOS strategy for a offspring-parent type credit assignment strategy
+     * @param operatorSelector the operator selection strategy
+     * @param creditAssignment the credit assignment strategy
+     * @param initialNFE The number of function evaluation used for the initial population
+     */
     public AOSVariationOP(OperatorSelector operatorSelector, AbstractOffspringParent creditAssignment, int initialNFE) {
         super(operatorSelector, creditAssignment, initialNFE);
         this.solutionHistory = new ArrayList<>();

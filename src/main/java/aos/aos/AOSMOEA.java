@@ -5,17 +5,17 @@
  */
 package aos.aos;
 
-import aos.creditassigment.ICreditAssignment;
 import aos.history.CreditHistory;
 import aos.history.OperatorQualityHistory;
 import aos.history.OperatorSelectionHistory;
-import aos.operator.AbstractAOSVariation;
 import java.util.HashSet;
 import java.util.Set;
 import org.moeaframework.algorithm.AbstractEvolutionaryAlgorithm;
 import org.moeaframework.core.Problem;
 import org.moeaframework.core.Solution;
 import aos.operatorselectors.OperatorSelector;
+import aos.creditassigment.CreditAssignment;
+import aos.operator.AOSVariation;
 
 /**
  * An MOEA with an adaptive operator selector controlling the use of the
@@ -33,7 +33,7 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements AOS {
     /**
      * The AOS strategy
      */
-    private final AbstractAOSVariation aosStrategy;
+    private final AOSVariation aosStrategy;
 
     /**
      * Name to id the AOS
@@ -62,7 +62,7 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements AOS {
      * created for post-run analysis
      */
     public AOSMOEA(AbstractEvolutionaryAlgorithm ea,
-            AbstractAOSVariation aosStrategy, boolean recordAllSolutions) {
+            AOSVariation aosStrategy, boolean recordAllSolutions) {
         super(ea.getProblem(), ea.getPopulation(), ea.getArchive(), null);
         this.ea = ea;
         this.aosStrategy = aosStrategy;
@@ -151,7 +151,7 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements AOS {
     }
 
     @Override
-    public ICreditAssignment getCreditAssignment() {
+    public CreditAssignment getCreditAssignment() {
         return aosStrategy.getCreditAssignment();
     }
 

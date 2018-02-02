@@ -22,7 +22,13 @@ import aos.operatorselectors.OperatorSelector;
 public class AOSVariationSI extends AbstractAOSVariation {
     
     private final Collection<Solution> solutionHistory; 
-   
+    
+   /**
+     * Creates a new AOS strategy for a set-improvement type credit assignment strategy
+     * @param operatorSelector the operator selection strategy
+     * @param creditAssignment the credit assignment strategy
+     * @param initialNFE The number of function evaluation used for the initial population
+     */
     public AOSVariationSI(OperatorSelector operatorSelector, AbstractSetImprovement creditAssignment, int initialNFE) {
         super(operatorSelector, creditAssignment, initialNFE);
         this.solutionHistory = new ArrayList<>();

@@ -15,7 +15,7 @@ import org.moeaframework.core.Population;
  *
  * @author nozomihitomi
  */
-public abstract class AbstractSetContribution implements ICreditAssignment {
+public abstract class AbstractSetContribution implements CreditAssignment {
 
     /**
      * Credit assigned if an operator does not contributed to the set;

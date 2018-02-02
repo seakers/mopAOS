@@ -5,6 +5,11 @@
  */
 package aos.operator;
 
+import aos.creditassigment.CreditAssignment;
+import aos.history.CreditHistory;
+import aos.history.OperatorQualityHistory;
+import aos.history.OperatorSelectionHistory;
+import aos.operatorselectors.OperatorSelector;
 import java.util.Collection;
 import org.moeaframework.core.Variation;
 
@@ -32,4 +37,36 @@ public interface AOSVariation extends Variation {
      * Computes the credits and updates the selection probabilities
      */
     public void update();
+    
+    /**
+     * Returns the selection history stored in the AOS
+     * @return the selection history stored in the AOS
+     */
+    public OperatorSelectionHistory getSelectionHistory();
+    
+    /**
+     * Gets the quality history stored for each operator in the AOS
+     * @return the quality history stored for each operator in the AOS
+     */
+    public OperatorQualityHistory getQualityHistory();
+    
+    /**
+     * Gets the credit history stored for each operator in the AOS
+     *
+     * @return the credit history stored for each operator in the AOS
+     */
+    public CreditHistory getCreditHistory();
+    
+    /**
+     * Gets the credit definition being used.
+     * @return the credit definition being used.
+     */
+    public CreditAssignment getCreditAssignment();
+    
+    /**
+     * Gets the strategy that is used to generate or select the next operator 
+     * @return the strategy that is used to generate or select the next operator 
+     */
+    public OperatorSelector getOperatorSelector();
+
 }

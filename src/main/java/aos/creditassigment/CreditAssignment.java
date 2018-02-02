@@ -11,5 +11,5 @@ package aos.creditassigment;
  *
  * @author Nozomi
  */
-public interface ICreditAssignment {
+public interface CreditAssignment {
 }

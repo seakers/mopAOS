@@ -13,7 +13,7 @@ import org.moeaframework.core.Solution;
  *
  * @author nozomihitomi
  */
-public abstract class AbstractOffspringParent implements ICreditAssignment {
+public abstract class AbstractOffspringParent implements CreditAssignment {
     
     /**
      * Computes the credit by comparing the offspring solution to its parent

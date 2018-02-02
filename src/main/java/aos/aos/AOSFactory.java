@@ -32,23 +32,23 @@ public class AOSFactory {
                 operatorSelector = new AllOperators(operators);
                 break;
             case "PM":{ //Probability matching
-                double pmin = properties.getDouble("pmin", 0.1);
-                double alpha = properties.getDouble("alpha", 0.8);
+                double pmin = properties.getDouble("pm.pmin", 0.1);
+                double alpha = properties.getDouble("pm.alpha", 0.8);
                 operatorSelector = new ProbabilityMatching(operators,alpha,pmin);
                 }
                 break;
             case "AP":{ //Adaptive Pursuit
-                double pmin = properties.getDouble("pmin", 0.1);
+                double pmin = properties.getDouble("ap.pmin", 0.1);
                 
-                double alpha = properties.getDouble("alpha", 0.8);
-                double beta = properties.getDouble("beta", 0.8);
+                double alpha = properties.getDouble("ap.alpha", 0.8);
+                double beta = properties.getDouble("ap.beta", 0.8);
                 operatorSelector = new AdaptivePursuit(operators, alpha, beta,pmin);
                 }
                 break;
             case "FRRMAB":{
-                double c = properties.getDouble("c", 0.5);
+                double c = properties.getDouble("frrmab.c", 0.5);
                 int windowSize = properties.getInt("frrmab.windowsize",100);
-                double d = properties.getDouble("d", 1);
+                double d = properties.getDouble("frrmab.d", 1);
                 operatorSelector = new FRRMAB(operators, c, windowSize,d);
             }
             break;

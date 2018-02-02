@@ -9,9 +9,9 @@ package aos.aos;
 import aos.history.CreditHistory;
 import aos.history.OperatorQualityHistory;
 import aos.history.OperatorSelectionHistory;
-import aos.creditassigment.ICreditAssignment;
 import org.moeaframework.core.Algorithm;
 import aos.operatorselectors.OperatorSelector;
+import aos.creditassigment.CreditAssignment;
 
 /**
  * AOS is the framework using a credit assignment and operator selection strategy 
@@ -42,7 +42,7 @@ public interface AOS extends Algorithm{
      * Gets the credit definition being used.
      * @return the credit definition being used.
      */
-    public ICreditAssignment getCreditAssignment();
+    public CreditAssignment getCreditAssignment();
     
     /**
      * Gets the strategy that is used to generate or select the next operator 

@@ -5,7 +5,7 @@
  */
 package aos.example;
 
-import aos.IO.AOSHistoryIO;
+import aos.history.AOSHistoryIO;
 import aos.aos.AOSMOEA;
 import aos.creditassignment.offspringparent.OffspringParentDomination;
 import aos.operator.AOSVariationOP;

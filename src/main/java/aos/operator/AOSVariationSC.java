@@ -16,6 +16,12 @@ import aos.operatorselectors.OperatorSelector;
  */
 public class AOSVariationSC extends AbstractAOSVariation {
    
+    /**
+     * Creates a new AOS strategy for a set-contribution type credit assignment strategy
+     * @param operatorSelector the operator selection strategy
+     * @param creditAssignment the credit assignment strategy
+     * @param initialNFE The number of function evaluation used for the initial population
+     */
     public AOSVariationSC(OperatorSelector operatorSelector, AbstractSetContribution creditAssignment, int initialNFE) {
         super(operatorSelector, creditAssignment, initialNFE);
     }

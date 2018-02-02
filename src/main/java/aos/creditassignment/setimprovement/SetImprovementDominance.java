@@ -11,8 +11,7 @@ import org.moeaframework.core.Solution;
 
 /**
  * This credit definition gives credit if the specified solution improves a set
- * of solutions using a dominance-based fitness. Credit is only assigned to the
- * specified solution
+ * of solutions using a dominance-based fitness.
  *
  * @author Nozomi
  */

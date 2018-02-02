@@ -12,7 +12,7 @@ import org.moeaframework.core.Solution;
 
 /**
  * This credit definition gives credit if the specified solution improves the
- * mean fitness value of a solution set
+ * mean fitness value of a solution set.
  *
  * @author Nozomi
  */

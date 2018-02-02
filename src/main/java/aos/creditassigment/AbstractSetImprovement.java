@@ -14,7 +14,7 @@ import org.moeaframework.core.Solution;
  *
  * @author nozomihitomi
  */
-public abstract class AbstractSetImprovement implements ICreditAssignment {
+public abstract class AbstractSetImprovement implements CreditAssignment {
     
     /**
      * The solution set to compute improvements

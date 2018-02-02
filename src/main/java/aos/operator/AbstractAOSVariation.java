@@ -6,7 +6,6 @@
 package aos.operator;
 
 import aos.creditassigment.Credit;
-import aos.creditassigment.ICreditAssignment;
 import aos.history.CreditHistory;
 import aos.history.OperatorQualityHistory;
 import aos.history.OperatorSelectionHistory;
@@ -15,6 +14,7 @@ import java.util.Map;
 import org.moeaframework.core.Solution;
 import org.moeaframework.core.Variation;
 import aos.operatorselectors.OperatorSelector;
+import aos.creditassigment.CreditAssignment;
 
 /**
  * Abstract class for an AOS variation
@@ -41,7 +41,7 @@ public abstract class AbstractAOSVariation implements AOSVariation {
     /**
      * Credit assignment strategy
      */
-    private final ICreditAssignment creditAssignment;
+    private final CreditAssignment creditAssignment;
 
     /**
      * The history that stores all the operators selected by the hyper
@@ -67,7 +67,13 @@ public abstract class AbstractAOSVariation implements AOSVariation {
      */
     private int nfeCounter;
 
-    public AbstractAOSVariation(OperatorSelector operatorSelector, ICreditAssignment creditAssignment, int initialNFE) {
+    /**
+     * Creates a new AOS strategy that can be used in MOEAs.
+     * @param operatorSelector the operator selection strategy
+     * @param creditAssignment the credit assignment strategy
+     * @param initialNFE The number of function evaluation used for the initial population
+     */
+    public AbstractAOSVariation(OperatorSelector operatorSelector, CreditAssignment creditAssignment, int initialNFE) {
         this.operatorSelector = operatorSelector;
         this.creditAssignment = creditAssignment;
         this.operatorSelectionHistory = new OperatorSelectionHistory();
@@ -175,6 +181,7 @@ public abstract class AbstractAOSVariation implements AOSVariation {
      *
      * @return the operator selection strategy
      */
+    @Override
     public OperatorSelector getOperatorSelector() {
         return operatorSelector;
     }
@@ -184,7 +191,8 @@ public abstract class AbstractAOSVariation implements AOSVariation {
      *
      * @return the credit assignment strategy
      */
-    public ICreditAssignment getCreditAssignment() {
+    @Override
+    public CreditAssignment getCreditAssignment() {
         return creditAssignment;
     }
 
@@ -193,6 +201,7 @@ public abstract class AbstractAOSVariation implements AOSVariation {
      *
      * @return the operator selection history
      */
+    @Override
     public OperatorSelectionHistory getSelectionHistory() {
         return operatorSelectionHistory;
     }
@@ -202,6 +211,7 @@ public abstract class AbstractAOSVariation implements AOSVariation {
      *
      * @return the operator quality history
      */
+    @Override
     public OperatorQualityHistory getQualityHistory() {
         return qualityHistory;
     }
@@ -211,6 +221,7 @@ public abstract class AbstractAOSVariation implements AOSVariation {
      *
      * @return the credit history
      */
+    @Override
     public CreditHistory getCreditHistory() {
         return creditHistory;
     }
