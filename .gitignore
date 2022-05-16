@@ -14,3 +14,6 @@ dist/*
 
 #ignore data from first IEEE submission
 “Data from first submission”/*
+
+/results/
+/target/
