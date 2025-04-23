@@ -84,6 +84,10 @@ public class RouletteWheel extends AbstractOperatorSelector {
         return sum;
     }
 
+    public double getPmin() {
+        return this.pmin;
+    }
+
     @Override
     public void reset() {
         super.resetQualities();

@@ -65,6 +65,14 @@ public class AdaptivePursuit extends ProbabilityMatching {
             count++;
         }
     }
+
+    public void resetPmin(double newPmin) {
+        this.pmin = newPmin;
+    }
+
+    public void resetPmax() {
+        this.pmax = 1 - (probabilities.size() - 1) * pmin;
+    }
     
     @Override
     public void update(Credit reward, Variation operator) {

@@ -13,9 +13,12 @@ import java.util.Set;
 import org.moeaframework.algorithm.AbstractEvolutionaryAlgorithm;
 import org.moeaframework.core.Problem;
 import org.moeaframework.core.Solution;
+import seakers.aos.operatorselectors.AdaptivePursuit;
 import seakers.aos.operatorselectors.OperatorSelector;
 import seakers.aos.creditassignment.CreditAssignment;
 import seakers.aos.operator.AOSVariation;
+import seakers.aos.operatorselectors.ProbabilityMatching;
+import seakers.aos.operatorselectors.RouletteWheel;
 
 /**
  * An MOEA with an adaptive operator selector controlling the use of the
@@ -135,6 +138,20 @@ public class AOSMOEA extends AbstractEvolutionaryAlgorithm implements AOS {
                     allSolutions.add(soln.copy());
                 } else {
                     allSolutions.add(soln.deepCopy());
+                }
+            }
+        }
+
+        // Reduce p_min (and p_max if necessary) every 500 function evaluations till it reaches 0
+        if (ea.getNumberOfEvaluations() % 500 == 0) {
+            double oldPmin = ((RouletteWheel) aosStrategy.getOperatorSelector()).getPmin();
+            if (oldPmin >= 0.01) {
+                double newPmin = oldPmin - 0.01;
+                if (this.aosStrategy.getOperatorSelector() instanceof AdaptivePursuit) {
+                    ((AdaptivePursuit) this.aosStrategy.getOperatorSelector()).resetPmin(newPmin);
+                    ((AdaptivePursuit) this.aosStrategy.getOperatorSelector()).resetPmax();
+                } else if (this.aosStrategy.getOperatorSelector() instanceof ProbabilityMatching) {
+                    ((ProbabilityMatching) this.aosStrategy.getOperatorSelector()).resetPmin(newPmin);
                 }
             }
         }

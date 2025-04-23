@@ -39,6 +39,10 @@ public class ProbabilityMatching extends RouletteWheel {
         qualities = new HashMap<>();
         reset();
     }
+
+    public void resetPmin(double newPmin) {
+        this.pmin = newPmin;
+    }
     
     @Override
     public String toString() {
